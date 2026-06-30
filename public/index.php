@@ -15,6 +15,8 @@ require_once __DIR__ .'/../src/Middleware/LoggingMiddleware.php';
 require_once __DIR__ .'/../src/Controller/HomeController.php';
 require_once __DIR__ .'/../src/Controller/UserController.php';
 
+require_once __DIR__ .'/../src/helpers/helpers.php';
+
 $request = Request::fromGlobals();
 
 $container = new Container();

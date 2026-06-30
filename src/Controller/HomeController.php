@@ -6,6 +6,6 @@ class HomeController {
   }
 
   public function show(Request $request): Response {
-    return new Response(200, [], 'Body text = ' . $request->getBody());
+    return view('users/show', ['id' => 42]);
   }
 }
