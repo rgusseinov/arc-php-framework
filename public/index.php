@@ -12,10 +12,10 @@ require_once __DIR__ .'/../src/Middleware/MiddlewarePipeline.php';
 require_once __DIR__ .'/../src/Middleware/MiddlewareInterface.php';
 require_once __DIR__ .'/../src/Middleware/LoggingMiddleware.php';
 
-require_once __DIR__ .'/../src/Controller/HomeController.php';
-require_once __DIR__ .'/../src/Controller/UserController.php';
+require_once __DIR__ .'/../src/Controllers/HomeController.php';
+require_once __DIR__ .'/../src/Controllers/UserController.php';
 
-require_once __DIR__ .'/../src/helpers/helpers.php';
+require_once __DIR__ .'/../src/Helpers/helpers.php';
 
 $request = Request::fromGlobals();
 
