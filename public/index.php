@@ -40,3 +40,51 @@ Browser
 → Response::send()
 → Browser Output
 */
+
+/*
+	php arc make:model User
+					│
+					▼
+	arc (CLI entry point)
+					│
+					▼
+	ConsoleApplication
+					│
+					▼
+	Parse CLI arguments
+					│
+					▼
+	Find the requested command
+					│
+					▼
+	Instantiate the command
+					│
+					▼
+	Execute the command
+					│
+					▼
+	Print output to the terminal
+*/
+
+/*
+
+	arc
+    ↓
+ConsoleApplication
+    ↓
+MigrateCommand
+    ↓
+execute()
+
+*/
+
+/* The ConsoleApplication is responsible for:
+
+registering commands;
+parsing $argv;
+finding the requested command;
+executing it;
+printing errors if the command doesn't exist. */
+
+/* $argv = $_SERVER['argv'] ?? [];
+print_r($argv); */
