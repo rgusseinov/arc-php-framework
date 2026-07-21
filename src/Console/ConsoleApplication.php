@@ -27,6 +27,7 @@ class ConsoleApplication {
 
  */
 	public function add(CommandInterface $command): void {
+		$this->commands[$command->getName()] = $command;
 	}
 
 	public function run(array $argv): int {

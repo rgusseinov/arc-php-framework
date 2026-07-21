@@ -3,9 +3,7 @@
     "description": "Mini php framework",
     "type": "project",
     "autoload": {
-        "psr-4": {
-            "Rgusseinov\\ArcPhpFramework\\": "src/"
-        }
+        "files": ["src/Console/CommandInterface.php", "src/Console/ServeCommand.php", "src/Console/ConsoleApplication.php"]
     },
     "authors": [
         {
