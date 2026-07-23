@@ -6,6 +6,7 @@
         "files": ["src/Console/CommandInterface.php",
                   "src/Console/ServeCommand.php",
                   "src/Console/ConsoleApplication.php",
+                  "src/Console/HelpCommand.php",
                   "src/Console/Input.php",
                   "src/Console/ArgvParser.php"
                 ]

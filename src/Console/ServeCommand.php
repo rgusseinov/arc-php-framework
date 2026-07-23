@@ -31,13 +31,6 @@ class ServeCommand implements CommandInterface {
 		return $retval;
 	}
 
-	// execute()
-	// ├── parseOptions()
-	// ├── validatePort()
-	// ├── findAvailablePort()
-	// ├── buildCommandString()
-	// └── system()
-
 	private function validatePort(int $port): bool {
 		return ($port >= 1 && $port <= 65535);
 	}
