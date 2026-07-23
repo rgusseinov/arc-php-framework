@@ -5,5 +5,5 @@ interface CommandInterface {
 
 	public function getDescription(): string;
 
-	public function execute(array $arguments): int;
+	public function execute(Input $input): int;
 }

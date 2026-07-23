@@ -3,7 +3,12 @@
     "description": "Mini php framework",
     "type": "project",
     "autoload": {
-        "files": ["src/Console/CommandInterface.php", "src/Console/ServeCommand.php", "src/Console/ConsoleApplication.php"]
+        "files": ["src/Console/CommandInterface.php",
+                  "src/Console/ServeCommand.php",
+                  "src/Console/ConsoleApplication.php",
+                  "src/Console/Input.php",
+                  "src/Console/ArgvParser.php"
+                ]
     },
     "authors": [
         {

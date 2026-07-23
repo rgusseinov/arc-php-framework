@@ -31,17 +31,18 @@ class ConsoleApplication {
 	}
 
 	public function run(array $argv): int {
-		$command = $argv[1];			// make:model
-		// $argument1 = $argv[3];			// --fresh
-		// $argument2 = $argv[3];			// --fresh
-		
+		$command = $argv[1];
+
 		if (!array_key_exists($command, $this->commands)){
 			throw new Exception("Command {$command} not found.");
 		}
 
+ 		$parser = new ArgvParser();
+		$input = $parser->parse($argv);
+
 		$commandObject = $this->commands[$command];
 
-		$result = $commandObject->execute(array_slice($argv, 2));
+		$result = $commandObject->execute($input);
 
 		return $result;		
 	}
