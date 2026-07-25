@@ -8,6 +8,10 @@ class ConsoleApplication {
 	}
 
 	public function run(array $argv): int {
+		if (!isset($argv[1])){
+			throw new Exception("Incorrect command entered");
+		}	
+
 		$command = $argv[1];
 
 		if (!array_key_exists($command, self::$commands)){
@@ -15,7 +19,7 @@ class ConsoleApplication {
 		}
 
  		$parser = new ArgvParser();
-		$input = $parser->parse($argv);
+		$input = $parser->parse(array_slice($argv, 2));
 
 		$commandObject = self::$commands[$command];
 
