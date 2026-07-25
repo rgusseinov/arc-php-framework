@@ -8,9 +8,9 @@ require_once __DIR__ . '/../src/Core/Container.php';
 require_once __DIR__ .'/../src/Core/Router.php';
 require_once __DIR__ .'/../src/Core/Route.php';
 require_once __DIR__ .'/../src/Core/HttpKernel.php';
-require_once __DIR__ .'/../src/Middleware/MiddlewarePipeline.php';
-require_once __DIR__ .'/../src/Middleware/MiddlewareInterface.php';
-require_once __DIR__ .'/../src/Middleware/LoggingMiddleware.php';
+require_once __DIR__ .'/../src/Middlewares/MiddlewarePipeline.php';
+require_once __DIR__ .'/../src/Middlewares/MiddlewareInterface.php';
+require_once __DIR__ .'/../src/Middlewares/LoggingMiddleware.php';
 
 require_once __DIR__ .'/../src/Controllers/HomeController.php';
 require_once __DIR__ .'/../src/Controllers/UserController.php';
