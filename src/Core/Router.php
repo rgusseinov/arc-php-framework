@@ -69,7 +69,6 @@ class Router implements RouterInterface {
     $routes = $this->routes[$method] ?? [];
 
     $userPathSegments = array_values(array_filter(explode('/', $path)));
-      // echo '<pre>'; print_r($routes); exit;
 
     foreach ($routes as $route){
       if ($route->getPath() === $path){

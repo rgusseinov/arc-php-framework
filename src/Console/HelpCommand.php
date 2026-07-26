@@ -3,7 +3,7 @@
 class HelpCommand implements CommandInterface {
 	private array $commands;
 
-	public function setCommands(array $commands){
+	public function setCommands(array $commands): void {
 		$this->commands = $commands;
 	}
 

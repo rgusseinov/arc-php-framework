@@ -8,4 +8,5 @@ $app->add($help);
 $help->setCommands(ConsoleApplication::getCommands());
 
 $app->add(new MakeControllerCommand());
+$app->add(new MakeModelCommand());
 return $app;

@@ -1,7 +1,7 @@
 <?php
 
 class ServeCommand implements CommandInterface {
-	private $defaultPort = 8000;
+	private int $defaultPort = 8000;
 
 	public function getName(): string {
 		return "serve";	
@@ -11,7 +11,7 @@ class ServeCommand implements CommandInterface {
 		return "Start the Arc development server";
 	}
 
-	public function execute(Input $input): int {
+ 	public function execute(Input $input): int {
 		$port = $input->getOption('port', $this->defaultPort);
 
 		if (filter_var($port, FILTER_VALIDATE_INT) === false){
@@ -35,7 +35,7 @@ class ServeCommand implements CommandInterface {
 		return ($port >= 1 && $port <= 65535);
 	}
 
-	private function buildCommandString($port){
+	private function buildCommandString(int $port){
 		$command = "php -S 127.0.0.1:{$port} -t public";
 
 		return $command;
