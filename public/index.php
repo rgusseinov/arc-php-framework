@@ -17,6 +17,8 @@ require_once __DIR__ .'/../src/Controllers/UserController.php';
 
 require_once __DIR__ .'/../src/Helpers/helpers.php';
 
+$app = require __DIR__ . '/../bootstrap/app.php';
+
 $request = Request::fromGlobals();
 
 $container = new Container();

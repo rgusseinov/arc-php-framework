@@ -12,7 +12,10 @@
                   "src/Console/ArgvParser.php",
                   "src/Console/MakeControllerCommand.php",
                   "src/Console/Filesystem/Filesystem.php",                  
-                  "src/Console/MakeModelCommand.php"
+                  "src/Console/MakeModelCommand.php",
+                  "src/Providers/ServiceProviderInterface.php",
+                  "src/Providers/DatabaseServiceProvider.php",
+                  "src/Application/Application.php"
                 ]
     },
     "authors": [
