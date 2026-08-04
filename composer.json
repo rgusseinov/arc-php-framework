@@ -15,7 +15,13 @@
                   "src/Console/MakeModelCommand.php",
                   "src/Providers/ServiceProviderInterface.php",
                   "src/Providers/DatabaseServiceProvider.php",
-                  "src/Application/Application.php"
+                  "src/Application/Application.php",
+                  "src/Events/EventServiceProvider.php",
+                  "src/Events/Event.php",
+                  "src/Events/EventDispatcher.php",
+                  "src/Events/ListenerInterface.php",
+                  "src/Events/Listeners/SendEmailListener.php",
+                  "src/Events/Listeners/Logger.php"
                 ]
     },
     "authors": [
