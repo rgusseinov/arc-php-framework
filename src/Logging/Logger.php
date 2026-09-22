@@ -4,19 +4,31 @@ enum LogLevel: string {
   case Info = 'INFO';
   case Warning = 'WARNING';
   case Error = 'ERROR';
+
+  public function getPriority(): int {
+    return match ($this){
+      self::Info => 0,
+      self::Warning => 1,
+      self::Error => 2
+    };
+  }
 }
 
 class Logger {
   private string $path;
-  private string $mode = 'PRODUCTION';
+  private LogLevel $minLevel = LogLevel::Info;
 
-  public function __construct(string $path){
+  public function __construct(string $path, LogLevel $minLevel = LogLevel::Info){
     $this->path = $path;
+    $this->minLevel = $minLevel;
   }
 
-  private function writeLog(LogLevel $level, string $message): void {
-    $date = date('Y-m-d H:i:s');
+  private function writeLog(string $message, LogLevel $level = LogLevel::Info): void {
+    if ($level->getPriority() < $this->minLevel->getPriority()){
+      return;
+    }
 
+    $date = date('Y-m-d H:i:s');
     $formattedMessage = "[$level->value][$date] " . $message . PHP_EOL;
 
     $baseName = dirname($this->path);
@@ -29,24 +41,15 @@ class Logger {
   }
 
   public function info(string $message): void {
-    if ($this->mode == 'PRODUCTION'){
-      return;
-    }
-
-    $this->writeLog(LogLevel::Info, $message);
+    $this->writeLog($message, LogLevel::Info);
   }
 
   public function warning(string $message): void {
-    $this->writeLog(LogLevel::Warning, $message);
+    $this->writeLog($message, LogLevel::Warning);
   }
 
   public function error(string $message): void {
-    $this->writeLog(LogLevel::Error, $message);
+    $this->writeLog($message, LogLevel::Error);
   }
 
 }
-
-$l = new Logger('storage/log.log');
-
-$l->info('New user created');
-$l->warning('New user not created');
