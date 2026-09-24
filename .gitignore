@@ -1,2 +1,4 @@
 /vendor/
 **/.env
+/test.phpstorage/*
+!storage/.gitkeep
