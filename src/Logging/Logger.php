@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rgusseinov\Arc\Logging;
+namespace Arc\Framework\Logging;
 
 class Logger {
   private string $path;

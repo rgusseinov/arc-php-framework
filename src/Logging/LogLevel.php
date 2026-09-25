@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rgusseinov\Arc\Logging;
+namespace Arc\Framework\Logging;
 
 enum LogLevel: string {
   case Info = 'INFO';
