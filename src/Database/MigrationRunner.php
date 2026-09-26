@@ -1,11 +1,8 @@
 <?php
 
-/*
-	найти все файлы миграций;
-	создать объекты миграций;
-	вызвать up();
-	отметить их как выполненные в таблице migrations.
-*/
+namespace Arc\Framework\Database;
+
+use Exception;
 
 class MigrationRunner {
     private Connection $connection;

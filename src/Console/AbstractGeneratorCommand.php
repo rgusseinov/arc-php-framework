@@ -1,5 +1,11 @@
 <?php
 
+namespace Arc\Framework\Console;
+
+use Arc\Framework\Console\CommandInterface;
+use Arc\Framework\Console\Filesystem\Filesystem;
+use Arc\Framework\Console\Input;
+
 abstract class AbstractGeneratorCommand implements CommandInterface {
 	abstract protected function getDirectory(): string;
 	abstract protected function getStub(): string;

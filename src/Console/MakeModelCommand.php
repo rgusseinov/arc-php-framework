@@ -1,5 +1,10 @@
 <?php
 
+namespace Arc\Framework\Console;
+
+use Arc\Framework\Console\AbstractGeneratorCommand;
+use Arc\Framework\Console\CommandInterface;
+
 class MakeModelCommand extends AbstractGeneratorCommand implements CommandInterface {
 	public function getName(): string {
 		return "make:model";	

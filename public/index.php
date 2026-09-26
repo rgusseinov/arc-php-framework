@@ -2,18 +2,14 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-require_once __DIR__ . '/../src/Http/Request.php';
-require_once __DIR__ . '/../src/Http/Response.php';
-require_once __DIR__ . '/../src/Core/Container.php';
-require_once __DIR__ .'/../src/Core/Router.php';
-require_once __DIR__ .'/../src/Core/Route.php';
-require_once __DIR__ .'/../src/Core/HttpKernel.php';
-require_once __DIR__ .'/../src/Middlewares/MiddlewarePipeline.php';
-require_once __DIR__ .'/../src/Middlewares/MiddlewareInterface.php';
-require_once __DIR__ .'/../src/Middlewares/LoggingMiddleware.php';
-
-require_once __DIR__ .'/../src/Controllers/HomeController.php';
-require_once __DIR__ .'/../src/Controllers/UserController.php';
+use Arc\Framework\Core\HttpKernel;
+use Arc\Framework\Http\Request;
+use Arc\Framework\Http\Response;
+use Arc\Framework\Middlewares\MiddlewarePipeline;
+use Arc\Framework\Middlewares\LoggingMiddleware;
+use Arc\Framework\Events\EventDispatcher;
+use Arc\Framework\Core\Router;
+use Arc\Framework\Core\Route;
 
 require_once __DIR__ .'/../src/Helpers/helpers.php';
 
@@ -23,12 +19,7 @@ $container = $app->getContainer();
 
 $dispatcher = $container->get(EventDispatcher::class);
 
-/* class OrderCreated implements Event {}
-$dispatcher->dispatch(new OrderCreated()); */
-
 $request = Request::fromGlobals();
-
-$container = new Container();
 $router = new Router();
 
 require_once __DIR__  . '/../config/routes.php';

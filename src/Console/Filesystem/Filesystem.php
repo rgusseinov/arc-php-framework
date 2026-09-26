@@ -1,5 +1,7 @@
 <?php
 
+namespace Arc\Framework\Console\Filesystem;
+
 class Filesystem {
 	public function exists(string $path): bool {
 		return file_exists($path);

@@ -1,5 +1,10 @@
 <?php
 
+namespace Arc\Framework\Console;
+
+use Arc\Framework\Console\CommandInterface;
+use Exception;
+
 class ServeCommand implements CommandInterface {
 	private int $defaultPort = 8000;
 

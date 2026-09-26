@@ -1,5 +1,9 @@
 <?php
 
+namespace Arc\Framework\Helpers;
+
+use Arc\Framework\Http\Response;
+
 function view(string $template, array $data): Response {
   $path = __DIR__ . "/../Templates/{$template}.php";
 

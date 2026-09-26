@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace Arc\Framework\Http;
+
 final class Response 
 {
   private int $status;

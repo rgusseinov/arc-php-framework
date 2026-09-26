@@ -1,8 +1,10 @@
 <?php
 
+require_once __DIR__ . '/vendor/autoload.php';
 require_once 'Env.php';
-require_once './src/Database/Connection.php';
-require_once './src/Database/MigrationRunner.php';
+
+use Arc\Framework\Database\Connection;
+use Arc\Framework\Database\MigrationRunner;
 
 Env::load(__DIR__ . '/.env');
 

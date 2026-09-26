@@ -1,5 +1,9 @@
 <?php
 
+namespace Arc\Framework\Database;
+
+use Exception;
+
 abstract class Model {
 	protected static string $table;
 	protected bool $exists = false;
@@ -13,7 +17,6 @@ abstract class Model {
 		self::$container = $container;
 	}
 
-	// Подумай, соответствует ли название тому, что метод делает.
 	private function setAttributes($result){
 		$this->attributes = $result;
 

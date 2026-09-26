@@ -1,21 +1,8 @@
 <?php 
 
-/*
-  Route objects
+declare(strict_types=1);
 
-  Route должен хранить
-
-  method
-  path
-  handler
-
-  Route должен иметь методы
-
-  getMethod()
-  getPath()
-  getHandler()
-
-*/
+namespace Arc\Framework\Core;
 
 class Route {
   private string $method;

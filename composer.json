@@ -5,27 +5,7 @@
     "autoload": {
         "psr-4": {
             "Arc\\Framework\\": "src/"
-        },
-        "files": ["src/Console/CommandInterface.php",
-                 "src/Console/AbstractGeneratorCommand.php",
-                  "src/Console/ServeCommand.php",
-                  "src/Console/ConsoleApplication.php",
-                  "src/Console/HelpCommand.php",
-                  "src/Console/Input.php",
-                  "src/Console/ArgvParser.php",
-                  "src/Console/MakeControllerCommand.php",
-                  "src/Console/Filesystem/Filesystem.php",                  
-                  "src/Console/MakeModelCommand.php",
-                  "src/Providers/ServiceProviderInterface.php",
-                  "src/Providers/DatabaseServiceProvider.php",
-                  "src/Application/Application.php",
-                  "src/Events/EventServiceProvider.php",
-                  "src/Events/Event.php",
-                  "src/Events/EventDispatcher.php",
-                  "src/Events/ListenerInterface.php",
-                  "src/Events/Listeners/SendEmailListener.php",
-                  "src/Events/Listeners/Logger.php"
-                ]
+        }
     },
     "authors": [
         {

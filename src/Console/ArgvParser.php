@@ -1,5 +1,9 @@
 <?php
 
+namespace Arc\Framework\Console;
+
+use Arc\Framework\Console\Input;
+
 class ArgvParser {
     public function parse(array $arguments): Input {
         $options = [];

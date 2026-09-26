@@ -1,13 +1,15 @@
 <?php
 
+namespace Arc\Framework\Events;
+
+use Arc\Framework\Providers\ServiceProviderInterface;
+use Arc\Framework\Core\Container;
+use Arc\Framework\Events\Listeners\SendEmailListener;
+use Arc\Framework\Events\Listeners\LogListener;
+
 class EventServiceProvider implements ServiceProviderInterface
 {
-    protected array $listen = [
-        OrderCreated::class => [
-            SendEmailListener::class,
-            Logger::class,
-        ],
-    ];
+    protected array $listen = [];
 
     public function register(Container $container): void
     {

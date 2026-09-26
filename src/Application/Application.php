@@ -1,5 +1,11 @@
 <?php
 
+namespace Arc\Framework\Application;
+
+use Arc\Framework\Core\Container;
+use Arc\Framework\Providers\ServiceProviderInterface;
+use RuntimeException;
+
 class Application
 {
     private Container $container;

@@ -1,5 +1,11 @@
 <?php
 
+namespace Arc\Framework\Console;
+
+use Arc\Framework\Console\ArgvParser;
+use Arc\Framework\Console\CommandInterface;
+use Exception;
+
 class ConsoleApplication {
 	protected static array $commands = [];
 

@@ -1,5 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
+namespace Arc\Framework\Core;
+
+use ReflectionClass;
+use Exception;
+
 interface ContainerInterface {
     public function get(string $id);
     public function has(string $id): bool;
@@ -65,7 +72,7 @@ class Container implements ContainerInterface {
         return $this->autowire($id);
     }
 
-    return throw new Exception("There is some class issue");
+    throw new Exception("There is some class issue");
   }
 
   private function autowire($id){

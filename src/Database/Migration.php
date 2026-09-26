@@ -1,5 +1,9 @@
 <?php
 
+namespace Arc\Framework\Database;
+
+use Arc\Framework\Database\Connection;
+
 abstract class Migration {
 	protected Connection $connection;
 
@@ -9,6 +13,5 @@ abstract class Migration {
 
 	abstract public function up();
 
-	abstract public function down();
-	
+	abstract public function down();	
 }

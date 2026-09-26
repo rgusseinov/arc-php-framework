@@ -1,5 +1,7 @@
 <?php
 
+namespace Arc\Framework\Console;
+
 class Input {
 		private $arguments = [];
 		private $options = [];

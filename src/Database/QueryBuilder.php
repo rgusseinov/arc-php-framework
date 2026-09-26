@@ -1,5 +1,9 @@
 <?php
 
+namespace Arc\Framework\Database;
+
+use InvalidArgumentException;
+
 class QueryBuilder {
   private Connection $connection;
   private string $table;

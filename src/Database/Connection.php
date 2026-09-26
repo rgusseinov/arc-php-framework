@@ -1,7 +1,9 @@
 <?php
 
-require_once 'QueryBuilder.php';
+namespace Arc\Framework\Database;
 
+use PDO;
+use PDOStatement;
 
 class Connection
 {

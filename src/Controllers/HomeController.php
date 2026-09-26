@@ -1,5 +1,11 @@
 <?php
 
+namespace Arc\Framework\Controllers;
+
+use Arc\Framework\Http\Request;
+use Arc\Framework\Http\Response;
+use function Arc\Framework\Helpers\view;
+
 class HomeController {
   public function index(Request $request): Response {
     return new Response(200, [], 'Main body text = ' . $request->getBody());
