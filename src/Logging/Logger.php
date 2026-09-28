@@ -3,8 +3,9 @@
 declare(strict_types=1);
 
 namespace Arc\Framework\Logging;
+use Psr\Log\LoggerInterface;
 
-class Logger {
+class Logger implements LoggerInterface {
   private string $path;
   private LogLevel $minLevel = LogLevel::Info;
 
@@ -13,7 +14,7 @@ class Logger {
     $this->minLevel = $minLevel;
   }
 
-  private function writeLog(string $message, LogLevel $level = LogLevel::Info): void {
+  private function writeLog(string|\Stringable $message, LogLevel $level = LogLevel::Info): void {
     if ($level->getPriority() < $this->minLevel->getPriority()){
       return;
     }
@@ -30,16 +31,45 @@ class Logger {
     file_put_contents($this->path, $formattedMessage, FILE_APPEND);
   }
 
-  public function info(string $message): void {
+  public function info(string|\Stringable $message, array $context = []): void {
     $this->writeLog($message, LogLevel::Info);
   }
 
-  public function warning(string $message): void {
+  public function warning(string|\Stringable $message, array $context = []): void {
     $this->writeLog($message, LogLevel::Warning);
   }
 
-  public function error(string $message): void {
+  public function error(string|\Stringable $message, array $context = []): void {
     $this->writeLog($message, LogLevel::Error);
   }
 
+  public function debug(string|\Stringable $message, array $context = []): void {
+    $this->writeLog($message, LogLevel::Debug);
+  }
+
+  public function notice(string|\Stringable $message, array $context = []): void {
+    $this->writeLog($message, LogLevel::Notice);
+  }
+
+  public function critical(string|\Stringable $message, array $context = []): void {
+    $this->writeLog($message, LogLevel::Critical);
+  }
+
+  public function alert(string|\Stringable $message, array $context = []): void {
+    $this->writeLog($message, LogLevel::Alert);
+  }
+
+  public function emergency(string|\Stringable $message, array $context = []): void {
+    $this->writeLog($message, LogLevel::Emergency);
+  }
+
+  public function log($level, string|\Stringable $message, array $context = []): void {
+    $logLevel = LogLevel::tryFrom($level);
+
+    if ($logLevel === null) {
+        throw new \Psr\Log\InvalidArgumentException("Unknown log level: {$level}");
+    }
+
+    $this->writeLog($message, $logLevel);
+  }
 }
