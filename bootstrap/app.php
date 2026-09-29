@@ -3,11 +3,13 @@
 use Arc\Framework\Application\Application;
 use Arc\Framework\Providers\DatabaseServiceProvider;
 use Arc\Framework\Events\EventServiceProvider;
+use Arc\Framework\Providers\LoggingServiceProvider;
 
 $app = new Application();
 
 $app->register(new DatabaseServiceProvider());
 $app->register(new EventServiceProvider());
+$app->register(new LoggingServiceProvider());
 
 $app->boot();
 
