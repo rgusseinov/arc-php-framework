@@ -9,6 +9,8 @@ use Arc\Framework\Http\Response;
 use Arc\Framework\Middlewares\LoggingMiddleware;
 use Arc\Framework\Middlewares\MiddlewarePipeline;
 use Arc\Framework\Middlewares\RequestHandlerInterface;
+use Psr\Log\LoggerInterface;
+use Throwable;
 
 // HttpKernel — это оркестратор HTTP lifecycle: Request → Routing → Controller → Response.
 
@@ -18,7 +20,7 @@ class HttpKernel implements RequestHandlerInterface {
 
   public function __construct($router, $container){
     $this->router = $router; 
-    $this->container = $container; 
+    $this->container = $container;
   }
 
   public function handle(Request $request): Response {
@@ -26,9 +28,17 @@ class HttpKernel implements RequestHandlerInterface {
       new LoggingMiddleware()
     ]);
 
-    $finalHandler = new FinalHandler($this->router, $this->container);
-    $response = $pipeline->handle($request, $finalHandler);
+    try {
+      $finalHandler = new FinalHandler($this->router, $this->container);
+      $response = $pipeline->handle($request, $finalHandler);
 
-    return $response;
+      return $response;
+    } catch (Throwable $e){
+      $logger = $this->container->get(LoggerInterface::class);
+      $logger->critical($e->getMessage());
+
+      return new Response(500, [], 'Internal Server Error');
+    }
+
   }
 }
