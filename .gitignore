@@ -1,5 +1,6 @@
 /vendor/
 **/.env
-/test.phpstorage/*
-!storage/.gitkeep
-test.php
+/test.php
+/storage/*
+!/storage/.gitkeep
+.phpunit.result.cache
