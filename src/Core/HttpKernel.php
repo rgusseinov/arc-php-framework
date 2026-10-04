@@ -12,14 +12,12 @@ use Arc\Framework\Middlewares\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-// HttpKernel — это оркестратор HTTP lifecycle: Request → Routing → Controller → Response.
-
 class HttpKernel implements RequestHandlerInterface {
-  private $router;
-  private $container;
+  private Router $router;
+  private Container $container;
 
-  public function __construct($router, $container){
-    $this->router = $router; 
+  public function __construct(Container $container){
+    $this->router = $container->get(Router::class);
     $this->container = $container;
   }
 
