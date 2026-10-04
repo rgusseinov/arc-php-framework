@@ -1,20 +1,20 @@
 <?php
 
-use Arc\Framework\Application\Application;
+declare(strict_types=1);
 
-use Arc\Framework\Providers\DatabaseServiceProvider;
-use Arc\Framework\Events\EventServiceProvider;
-use Arc\Framework\Providers\ConfigServiceProvider;
-use Arc\Framework\Providers\LoggingServiceProvider;
-use Arc\Framework\Providers\RouteServiceProvider;
+use Arc\Framework\Application\Application;
+use Arc\Framework\Core\Config;
 
 $app = new Application();
 
-$app->register(new DatabaseServiceProvider());
-$app->register(new EventServiceProvider());
-$app->register(new LoggingServiceProvider());
-$app->register(new RouteServiceProvider());
-$app->register(new ConfigServiceProvider());
+$config = new Config(__DIR__ . '/../config');
+$providers = $config->get('app.providers');
+
+$app->getContainer()->singleton(Config::class, fn () => $config);
+
+foreach ($providers as $provider){
+	$app->register(new $provider());
+}
 
 $app->boot();
 

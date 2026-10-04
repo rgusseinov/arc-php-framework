@@ -11,7 +11,7 @@ $app = require __DIR__ . '/../bootstrap/app.php';
 
 $container = $app->getContainer();
 
-$request = Request::fromGlobals();                                                                                                      
+$request = Request::fromGlobals();
 
 $kernel = new HttpKernel($container);
 
