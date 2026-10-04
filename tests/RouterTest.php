@@ -1,35 +1,27 @@
 <?php
 
+namespace Tests\Core;
+
+use Arc\Framework\Controllers\HomeController;
+use Arc\Framework\Core\Router;
+use Arc\Framework\Http\Request;
 use PHPUnit\Framework\TestCase;
-require_once __DIR__ . '/../src/Http/Request.php';
-require_once __DIR__ .'/../src/Core/Router.php';
-require_once __DIR__ .'/../src/Core/Route.php';
-require_once __DIR__ .'/../src/Controller/HomeController.php';
 
+final class RouterTest extends TestCase {
 
-/*
-Протестировать:
-  маршрут регистрируется
-  маршрут находится
-  несуществующий маршрут → null
-*/
-
-
-final class RouterTest extends TestCase
-{
+    private Router $router;
 
     protected function setUp(): void {
-        parent::setUp();
-        // Your setup code here
+      parent::setUp();
+
+      $this->router = new Router();
+      $this->router->get('/tasks', [HomeController::class, 'show']);
     }
 
     public function testRouteFound(): void
     {
       $request = new Request('GET', '/tasks', [], [], '');
-      $router = new Router();
-      $router->get('/tasks', [HomeController::class, 'show']);
-
-      $route = $router->match($request);
+      $route = $this->router->match($request);
 
       $this->assertNotNull($route);
     }
@@ -37,10 +29,8 @@ final class RouterTest extends TestCase
     public function testRouteHandlerIsMatch(): void
     {
       $request = new Request('GET', '/tasks', [], [], '');
-      $router = new Router();
-      $router->get('/tasks', [HomeController::class, 'show']);
 
-      $route = $router->match($request);
+      $route = $this->router->match($request);
       $handler = $route->getHandler();
 
       $this->assertEquals([HomeController::class, 'show'], $handler);
@@ -49,10 +39,7 @@ final class RouterTest extends TestCase
     public function testRouterIsNull(): void
     {
       $request = new Request('GET', '/abc', [], [], '');
-      $router = new Router();
-      $router->get('/tasks', [HomeController::class, 'show']);
-
-      $route = $router->match($request);
+      $route = $this->router->match($request);
 
       $this->assertNull($route);
     }

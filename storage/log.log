@@ -13,3 +13,4 @@
 [critical][2026-10-03 22:35:43] Test exception for handler
 [critical][2026-10-03 22:35:46] Test exception for handler
 [critical][2026-10-03 22:36:09] Test exception for handler
+[critical][2026-10-03 22:39:34] Too few arguments to function Arc\Framework\Http\Response::__construct(), 2 passed in /var/www/html/arc-php-framework/src/Controllers/UserController.php on line 10 and exactly 3 expected

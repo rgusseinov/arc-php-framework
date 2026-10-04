@@ -15,9 +15,7 @@ class HomeController {
     $this->logger = $logger;
   }
   public function index(Request $request): Response {
-    $this->logger->info('Home page loaded...');
-
-    return new Response(200, [], 'Main body text = ' . $request->getBody());
+    return new Response(200, [], $request->getBody());
   }
 
   public function show(Request $request): Response {
