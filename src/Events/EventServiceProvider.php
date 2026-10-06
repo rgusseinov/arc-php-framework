@@ -7,9 +7,13 @@ use Arc\Framework\Core\Container;
 use Arc\Framework\Events\Listeners\SendEmailListener;
 use Arc\Framework\Events\Listeners\LogListener;
 
-class EventServiceProvider implements ServiceProviderInterface
-{
-    protected array $listen = [];
+class EventServiceProvider implements ServiceProviderInterface {
+    protected array $listen = [
+        OrderCreated::class => [
+            SendEmailListener::class,
+            LogListener::class,
+        ],
+    ];
 
     public function register(Container $container): void
     {

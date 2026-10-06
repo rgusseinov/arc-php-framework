@@ -14,6 +14,7 @@ class HomeController {
   public function __construct(LoggerInterface $logger){
     $this->logger = $logger;
   }
+
   public function index(Request $request): Response {
     return new Response(200, [], $request->getBody());
   }
