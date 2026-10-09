@@ -30,7 +30,7 @@ class HelpCommand implements CommandInterface {
 			$name = str_pad($command->getName(), 10);
 			$description = $command->getDescription();
 
-			$info .= "  {$name}{$description}" . PHP_EOL;
+			$info .= "  {$name} {$description}" . PHP_EOL;
 		}
 
 		echo $info;

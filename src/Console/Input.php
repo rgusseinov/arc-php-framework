@@ -12,7 +12,7 @@ class Input {
 		}
 
     public function hasOption(string $name): bool {
-			return $this->options[$name] ?? false;
+			return array_key_exists($name, $this->options);
     }
 
     public function getOption(string $name, mixed $default = null): mixed {

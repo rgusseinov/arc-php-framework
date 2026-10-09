@@ -4,7 +4,7 @@ namespace Arc\Framework\Console;
 
 use Arc\Framework\Console\ArgvParser;
 use Arc\Framework\Console\CommandInterface;
-use Exception;
+use Throwable;
 
 class ConsoleApplication {
 	protected static array $commands = [];
@@ -15,13 +15,17 @@ class ConsoleApplication {
 
 	public function run(array $argv): int {
 		if (!isset($argv[1])){
-			throw new Exception("Incorrect command entered");
-		}	
+			return self::$commands['help']->execute(new Input([], []));
+		}
 
 		$command = $argv[1];
 
 		if (!array_key_exists($command, self::$commands)){
-			throw new Exception("Command {$command} not found.");
+			fwrite(STDERR, "Command {$command} not found." . PHP_EOL);
+
+			self::$commands['help']->execute(new Input([], []));
+
+			return 1;
 		}
 
  		$parser = new ArgvParser();
@@ -29,9 +33,13 @@ class ConsoleApplication {
 
 		$commandObject = self::$commands[$command];
 
-		$result = $commandObject->execute($input);
+		try {
+				return $commandObject->execute($input);
+		} catch (Throwable $e) {
+				fwrite(STDERR, "Error: " . $e->getMessage() . PHP_EOL);
 
-		return $result;		
+				return 1;
+		}
 	}
 
 	public static function getCommands(){
