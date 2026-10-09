@@ -4,17 +4,10 @@ namespace Arc\Framework\Controllers;
 
 use Arc\Framework\Http\Request;
 use Arc\Framework\Http\Response;
-use Psr\Log\LoggerInterface;
 
 use function Arc\Framework\Helpers\view;
 
 class HomeController {
-  private LoggerInterface $logger;
-
-  public function __construct(LoggerInterface $logger){
-    $this->logger = $logger;
-  }
-
   public function index(Request $request): Response {
     return new Response(200, [], $request->getBody());
   }
