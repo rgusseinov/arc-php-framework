@@ -7,12 +7,13 @@ use Arc\Framework\Console\MakeModelCommand;
 use Arc\Framework\Console\ServeCommand;
 
 $app = new ConsoleApplication();
-$app->add(new ServeCommand());
-
 $help = new HelpCommand();
-$app->add($help);
-$help->setCommands(ConsoleApplication::getCommands());
 
+$app->add(new ServeCommand());
+$app->add($help);
 $app->add(new MakeControllerCommand());
 $app->add(new MakeModelCommand());
+
+$help->setCommands(ConsoleApplication::getCommands());
+
 return $app;

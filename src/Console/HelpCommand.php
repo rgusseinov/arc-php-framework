@@ -2,11 +2,8 @@
 
 namespace Arc\Framework\Console;
 
-use Arc\Framework\Console\CommandInterface;
-use Arc\Framework\Console\Input;
-
 class HelpCommand implements CommandInterface {
-	private array $commands;
+	private array $commands = [];
 
 	public function setCommands(array $commands): void {
 		$this->commands = $commands;
