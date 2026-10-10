@@ -2,24 +2,30 @@
 
 use Arc\Framework\Console\ConsoleApplication;
 use Arc\Framework\Console\HelpCommand;
-use Arc\Framework\Console\MakeControllerCommand;
-use Arc\Framework\Console\MakeModelCommand;
-use Arc\Framework\Console\MigrateCommand;
-use Arc\Framework\Console\ServeCommand;
+use Arc\Framework\Core\Config;
 
 $app = require __DIR__ . '/../bootstrap/app.php';
 
 $container = $app->getContainer();
 
 $console = $container->get(ConsoleApplication::class);
-$help = $container->get(HelpCommand::class);
 
-$console->add($container->get(MigrateCommand::class));
-$console->add($container->get(ServeCommand::class));
-$console->add($help);
-$console->add($container->get(MakeControllerCommand::class));
-$console->add($container->get(MakeModelCommand::class));
+$config = new Config(__DIR__ . '/../config');
+$commands = $config->get('console.commands');
 
-$help->setCommands(ConsoleApplication::getCommands());
+$helpCommand = null;
+foreach ($commands as $command){
+	$object = $container->get($command);
+
+	if ($object instanceof HelpCommand){
+		$helpCommand = $object;
+	}
+
+	$console->add($object);
+}
+
+if ($helpCommand instanceof HelpCommand){
+	$helpCommand->setCommands($console::getCommands());
+}
 
 return $console;
