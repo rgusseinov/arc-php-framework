@@ -4,16 +4,22 @@ use Arc\Framework\Console\ConsoleApplication;
 use Arc\Framework\Console\HelpCommand;
 use Arc\Framework\Console\MakeControllerCommand;
 use Arc\Framework\Console\MakeModelCommand;
+use Arc\Framework\Console\MigrateCommand;
 use Arc\Framework\Console\ServeCommand;
 
-$app = new ConsoleApplication();
-$help = new HelpCommand();
+$app = require __DIR__ . '/../bootstrap/app.php';
 
-$app->add(new ServeCommand());
-$app->add($help);
-$app->add(new MakeControllerCommand());
-$app->add(new MakeModelCommand());
+$container = $app->getContainer();
+
+$console = $container->get(ConsoleApplication::class);
+$help = $container->get(HelpCommand::class);
+
+$console->add($container->get(MigrateCommand::class));
+$console->add($container->get(ServeCommand::class));
+$console->add($help);
+$console->add($container->get(MakeControllerCommand::class));
+$console->add($container->get(MakeModelCommand::class));
 
 $help->setCommands(ConsoleApplication::getCommands());
 
-return $app;
+return $console;
