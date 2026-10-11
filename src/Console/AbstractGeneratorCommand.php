@@ -26,7 +26,7 @@ abstract class AbstractGeneratorCommand implements CommandInterface {
 			$filesystem->createDirectory($path);
 		}
 
-		$file = $path . '/' . $argument . '.php';
+		$file = $path . '/' . $this->getFileName($argument);
 
 		$name = ucfirst($argument);
 
@@ -51,5 +51,9 @@ abstract class AbstractGeneratorCommand implements CommandInterface {
 		echo "{$argument} created successfully. " . PHP_EOL;
 
 		return 0;
+	}
+	
+	protected function getFileName(string $argument): string {
+		return $argument . '.php';
 	}
 }
