@@ -6,6 +6,7 @@ namespace Arc\Framework\Core;
 
 use ReflectionClass;
 use Exception;
+use ReflectionNamedType;
 
 interface ContainerInterface {
     public function get(string $id);
@@ -101,14 +102,18 @@ class Container implements ContainerInterface {
         throw new Exception("Can't resolve parametrs {$param->getName()}");
         }
 
-        if ($type->isBuiltin()) {
-            if ($param->isDefaultValueAvailable()) {
-                $argsParams[] = $param->getDefaultValue();
+        if ($type instanceof ReflectionNamedType){
+            if ($type->isBuiltin()) {
+                if ($param->isDefaultValueAvailable()) {
+                    $argsParams[] = $param->getDefaultValue();
+                } else {
+                    throw new Exception("Builtin type needs config: \${$param->getName()}");
+                }
             } else {
-                throw new Exception("Builtin type needs config: \${$param->getName()}");
+                $argsParams[] = $this->get($type->getName());
             }
         } else {
-            $argsParams[] = $this->get($type->getName());
+            throw new Exception("Can't resolve union type for \${$param->getName()}");
         }
     }
     return $this->instances[$id] = $rc->newInstanceArgs($argsParams);

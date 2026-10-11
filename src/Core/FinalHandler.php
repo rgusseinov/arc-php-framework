@@ -9,6 +9,7 @@ use Arc\Framework\Http\Response;
 use Arc\Framework\Middlewares\RequestHandlerInterface;
 use Closure;
 use ReflectionMethod;
+use ReflectionNamedType;
 
 class FinalHandler implements RequestHandlerInterface {
   private $router;
@@ -51,25 +52,29 @@ class FinalHandler implements RequestHandlerInterface {
           $name = $param->getName();
           $type = $param->getType();
 
-          // 1️⃣ route params
+          // 1 route params
           if (array_key_exists($name, $routeParams)) {
               $args[] = $routeParams[$name];
               continue;
           }
 
-          // 2️⃣ Request
-          if ($type && $type->getName() === Request::class) {
-              $args[] = $request;
-              continue;
+          // 2 Request
+          if ($type instanceof ReflectionNamedType){
+            if ($type->getName() === Request::class) {
+                $args[] = $request;
+                continue;
+            }
           }
 
-          // 3️⃣ Container service
-          if ($type && !$type->isBuiltin()) {
-              $args[] = $this->container->get($type->getName());
-              continue;
+          // 3 Container service
+          if ($type instanceof ReflectionNamedType){
+            if (!$type->isBuiltin()) {
+                $args[] = $this->container->get($type->getName());
+                continue;
+            }
           }
 
-          // 4️⃣ fallback
+          // 4 fallback
           return new Response(500, [], "The Argument can't be solve");
       }
 

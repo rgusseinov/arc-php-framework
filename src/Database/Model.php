@@ -4,6 +4,10 @@ namespace Arc\Framework\Database;
 
 use Exception;
 
+/**
+ * @property int $id
+ */
+
 abstract class Model {
 	protected static string $table;
 	protected bool $exists = false;
