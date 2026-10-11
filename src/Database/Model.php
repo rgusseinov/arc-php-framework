@@ -13,6 +13,8 @@ abstract class Model {
 	protected ?string $relation = null;
 	protected array $relations = [];
 
+	final public function __construct(){}
+
 	public static function setContainer($container){
 		self::$container = $container;
 	}

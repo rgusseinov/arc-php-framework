@@ -1,5 +1,9 @@
 <?php
 
+namespace Arc\Framework\Models;
+
+use Arc\Framework\Database\Model;
+
 class Employee extends Model {
     protected static string $table = 'employees';
 

@@ -1,7 +1,10 @@
 <?php
 
-class User extends Model
-{
+namespace Arc\Framework\Models;
+
+use Arc\Framework\Database\Model;
+
+class User extends Model {
     protected static string $table = 'users';
 
     protected array $fillable = [

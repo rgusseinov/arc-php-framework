@@ -1,5 +1,10 @@
 <?php
 
+namespace Arc\Framework\Models;
+
+use Arc\Framework\Database\Model;
+use Arc\Framework\Models\User as ModelsUser;
+
 class Post extends Model {
     protected static string $table = 'posts';
 
@@ -10,6 +15,6 @@ class Post extends Model {
     ];
 
     public function user(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(ModelsUser::class);
     }
 }
