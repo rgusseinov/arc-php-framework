@@ -16,12 +16,12 @@ final class RouterTest extends TestCase
         parent::setUp();
 
         $this->router = new Router();
-        $this->router->get('/tasks', [HomeController::class, 'show']);
+        $this->router->get('/', [HomeController::class, 'show']);
     }
 
     public function testRouteFound(): void
     {
-        $request = new Request('GET', '/tasks', [], [], '');
+        $request = new Request('GET', '/', [], [], '');
         $route = $this->router->match($request);
 
         $this->assertNotNull($route);
@@ -29,7 +29,7 @@ final class RouterTest extends TestCase
 
     public function testRouteHandlerIsMatch(): void
     {
-        $request = new Request('GET', '/tasks', [], [], '');
+        $request = new Request('GET', '/', [], [], '');
 
         $route = $this->router->match($request);
         $handler = $route->getHandler();
