@@ -4,26 +4,28 @@ declare(strict_types=1);
 
 namespace Arc\Framework\Core;
 
+use Arc\Framework\Providers\ServiceProviderInterface;
 use ReflectionClass;
 use Exception;
 use ReflectionNamedType;
 
 interface ContainerInterface {
-    public function get(string $id);
+    public function get(string $id): mixed;
     public function has(string $id): bool;
 }
 
 class Container implements ContainerInterface {
-  private array $definitions = []; // как создавать
-  private array $instances = [];   // что уже создано
+    /** @var array<string, array{factory: callable|null, shared: bool}> */
+    private array $definitions = [];
 
-  public function bind(string $id, callable $factory)
-  {
+    /** @var array<string, object> */
+    private array $instances = [];
+
+  public function bind(string $id, callable $factory): void {
     $this->definitions[$id] = ['factory' => $factory, 'shared' => false];
   }
 
-  public function singleton(string $id, callable|null $factory = null)
-  {
+  public function singleton(string $id, callable|null $factory = null): void {
     $this->definitions[$id] = ['factory' => $factory, 'shared' => true];
   }
 
@@ -36,7 +38,7 @@ class Container implements ContainerInterface {
     return class_exists($id);
   }
 
-  public function get(string $id){
+  public function get(string $id): mixed {
     // если instance уже создан → вернуть
     // если есть factory → создать через factory
     // если class существует → autowire
@@ -76,7 +78,10 @@ class Container implements ContainerInterface {
     throw new Exception("There is some class issue");
   }
 
-  private function autowire($id){
+    /**
+     * @param class-string $id
+     */
+  private function autowire(string $id): object {
     $rc = new ReflectionClass($id);
 
     if (!$rc->isInstantiable()){
@@ -119,8 +124,7 @@ class Container implements ContainerInterface {
     return $this->instances[$id] = $rc->newInstanceArgs($argsParams);
   }
 
-  public function register($provider)
-  {
+  public function register(ServiceProviderInterface $provider): void {
     $provider->register($this); 
   }
 }

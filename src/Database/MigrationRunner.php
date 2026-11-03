@@ -8,39 +8,39 @@ class MigrationRunner {
     private Connection $connection;
     private string $migrationPath;
 
-		public function __construct(Connection $connection){
-			$this->connection = $connection;
-			$this->migrationPath = __DIR__ . '/../../migrations';
-		}
+    public function __construct(Connection $connection){
+        $this->connection = $connection;
+        $this->migrationPath = __DIR__ . '/../../migrations';
+    }
 
     public function run(): void {
-			$this->createMigrationsTableIfNotExists();
+        $this->createMigrationsTableIfNotExists();
 
-			$files = $this->findMigrationFiles();
-			$executedMigrations = $this->getExecutedMigrations();
+        $files = $this->findMigrationFiles();
+        $executedMigrations = $this->getExecutedMigrations();
 
-			foreach ($files as $file) {
-					$migrationName = basename($file);
+        foreach ($files as $file) {
+            $migrationName = basename($file);
 
-					if (in_array($migrationName, $executedMigrations, true)) {
-						echo "Skipped {$migrationName}\n";
-						continue;
-					}
+            if (in_array($migrationName, $executedMigrations, true)) {
+                echo "Skipped {$migrationName}\n";
+                continue;
+            }
 
-					$migration = require $file;
+            $migration = require $file;
 
-					if (!$migration instanceof Migration){
-						throw new Exception("Migration file {$migrationName} must be Migration instance");
-					}
+            if (!$migration instanceof Migration){
+                throw new Exception("Migration file {$migrationName} must be Migration instance");
+            }
 
-					$migration->setConnection($this->connection);
+            $migration->setConnection($this->connection);
 
-					$migration->up();
+            $migration->up();
 
-					$this->markAsExecuted($migrationName);
+            $this->markAsExecuted($migrationName);
 
-					echo "Migrated: {$migrationName}\n";
-			}
+            echo "Migrated: {$migrationName}\n";
+        }
     }
 
     private function createMigrationsTableIfNotExists(): void {
@@ -53,21 +53,31 @@ class MigrationRunner {
         ");
     }
 
-		private function findMigrationFiles(): array {
-			$files = glob($this->migrationPath . '/*.php');
+    /**
+     * @return list<string>
+     */
+    private function findMigrationFiles(): array {
+        $files = glob($this->migrationPath . '/*.php');
 
-			sort($files);
+        if ($files === false) {
+            return [];
+        }
 
-			return $files;
-		}
-		
-		private function getExecutedMigrations(): array {
-			$rows = $this->connection->fetchAll('SELECT migration FROM migrations');
+        sort($files);
 
-			return array_column($rows, 'migration');
-		}
+        return $files;
+    }
 
-		private function markAsExecuted(string $migrationName): void {
-			$this->connection->execute('INSERT INTO migrations(migration, executed_at) VALUES (?, NOW())', [$migrationName]);
-		}
+    /**
+     * @return array<int, mixed>
+     */
+    private function getExecutedMigrations(): array {
+        $rows = $this->connection->fetchAll('SELECT migration FROM migrations');
+
+        return array_column($rows, 'migration');
+    }
+
+    private function markAsExecuted(string $migrationName): void {
+        $this->connection->execute('INSERT INTO migrations(migration, executed_at) VALUES (?, NOW())', [$migrationName]);
+    }
 }

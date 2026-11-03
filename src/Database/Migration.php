@@ -2,8 +2,6 @@
 
 namespace Arc\Framework\Database;
 
-use Arc\Framework\Database\Connection;
-
 abstract class Migration {
 	protected Connection $connection;
 
@@ -11,7 +9,7 @@ abstract class Migration {
 			$this->connection = $connection;
 	}
 
-	abstract public function up();
+	abstract public function up(): void;
 
-	abstract public function down();	
+	abstract public function down(): void;
 }

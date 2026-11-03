@@ -14,7 +14,7 @@ class Post extends Model {
         'body',
     ];
 
-    public function user(){
-        return $this->belongsTo(ModelsUser::class);
+    public function user(): Model {
+        return $this->belongsTo(User::class);
     }
 }

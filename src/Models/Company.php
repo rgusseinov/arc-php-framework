@@ -12,7 +12,10 @@ class Company extends Model {
         'created_at'
     ];
     
-    public function employees(){
+    /**
+     * @return list<array<string, mixed>>
+     */
+    public function employees(): array {
         return $this->hasMany(Employee::class);
     }
 }

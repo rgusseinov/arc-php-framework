@@ -4,11 +4,14 @@ namespace Arc\Framework\Middlewares;
 
 use Arc\Framework\Http\Request;
 use Arc\Framework\Http\Response;
-use Arc\Framework\Middlewares\RequestHandlerInterface;
 
 class MiddlewarePipeline {
+  /** @var list<MiddlewareInterface> */
   private array $middlewares = [];
 
+  /**
+   * @param list<MiddlewareInterface> $middlewares
+   */
   public function __construct(array $middlewares){
     $this->middlewares = $middlewares;
   }

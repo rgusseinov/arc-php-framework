@@ -5,6 +5,9 @@ namespace Arc\Framework\Console;
 use Arc\Framework\Console\Input;
 
 class ArgvParser {
+    /**
+     * @param array<string> $arguments
+     */
     public function parse(array $arguments): Input {
         $options = [];
         $args = [];

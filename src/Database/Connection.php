@@ -29,6 +29,9 @@ class Connection
 		$this->pdo->rollBack();
 	}
 
+	/**
+	 * @param array<int, mixed> $params
+	 */
 	private function prepareAndExecute(string $sql, array $params): PDOStatement {
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute($params);
@@ -40,7 +43,10 @@ class Connection
 		return (new QueryBuilder($this))->table($table);
 	}
 
-
+	/**
+	 * @param array<int, mixed> $params
+	 * @return array<string, mixed>|null
+	 */
 	public function fetch(string $sql, array $params = []): ?array {
 		$stmt = $this->prepareAndExecute($sql, $params);
 		$result = $stmt->fetch();
@@ -48,6 +54,10 @@ class Connection
 		return $result === false ? null : $result;
 	}
 
+	/**
+	 * @param array<int, mixed> $params
+	 * @return list<array<string, mixed>>
+	 */
 	public function fetchAll(string $sql, array $params = []): array {
 		$stmt = $this->prepareAndExecute($sql, $params);
 		$result = $stmt->fetchAll();
@@ -55,12 +65,18 @@ class Connection
 		return $result;
 	}
 
+	/**
+	 * @param array<int, mixed> $params
+	 */
 	public function execute(string $sql, array $params = []): int {
 		$stmt = $this->prepareAndExecute($sql, $params);
 
 		return $stmt->rowCount();
 	}
 
+	/**
+	 * @param array<int, mixed> $params
+	 */
 	public function insert(string $sql, array $params = []): string|int {
 		$this->prepareAndExecute($sql, $params);
 

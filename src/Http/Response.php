@@ -7,9 +7,15 @@ namespace Arc\Framework\Http;
 final class Response 
 {
   private int $status;
+
+  /** @var array<string, string> */
   private array $headers;
+
   private string $body;
 
+  /**
+   * @param array<string, string> $headers
+   */
   public function __construct(
     int $status,
     array $headers,
@@ -25,6 +31,9 @@ final class Response
     return $this->status;
   }
 
+  /**
+   * @return array<string, string>
+   */
   public function getHeaders(): array {
     return $this->headers;
   }
@@ -33,7 +42,7 @@ final class Response
     return $this->body;
   }
 
-  public function send() {
+  public function send(): void {
     http_response_code($this->getStatus());
 
     foreach ($this->getHeaders() as $name => $value) {

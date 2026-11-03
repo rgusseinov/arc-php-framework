@@ -7,10 +7,17 @@ namespace Arc\Framework\Http;
 final class Request {
     private string $method;
     private string $path;
+    /** @var array<string, mixed> */
     private array $query;
+
+    /** @var array<string, string> */
     private array $headers;
     private string $body;
 
+  /**
+   * @param array<string, mixed> $query
+   * @param array<string, string> $headers
+   */
   public function __construct(
     string $method,
     string $path,
@@ -44,10 +51,16 @@ final class Request {
     return $this->path;
   }
 
+  /**
+   * @return array<string, mixed>
+   */
   public function getQuery(): array {
     return $this->query;
   }
 
+  /**
+   * @return array<string, string>
+   */
   public function getHeaders(): array {
     return $this->headers;
   }

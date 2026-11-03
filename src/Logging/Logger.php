@@ -14,8 +14,11 @@ class Logger implements LoggerInterface {
     $this->minLevel = $minLevel;
   }
 
+  /**
+   * @param array<string, mixed> $context
+   */
   private function writeLog(string|\Stringable $message, array $context = [], LogLevel $level = LogLevel::Info): void {
-      if ($level->getPriority() < $this->minLevel->getPriority()){
+   if ($level->getPriority() < $this->minLevel->getPriority()){
           return;
       }
 
@@ -33,6 +36,9 @@ class Logger implements LoggerInterface {
       file_put_contents($this->path, $formattedMessage, FILE_APPEND | LOCK_EX);
   }
 
+  /**
+   * @param array<string, mixed> $context
+   */
   private function interpolate(string|\Stringable $message, array $context = []): string {
     // build a replacement array with braces around the context keys
     $replace = array();

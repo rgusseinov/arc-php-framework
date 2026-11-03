@@ -8,6 +8,9 @@ use Arc\Framework\Events\Listeners\SendEmailListener;
 use Arc\Framework\Events\Listeners\LogListener;
 
 class EventServiceProvider implements ServiceProviderInterface {
+    /**
+     * @var array<class-string<Event>, list<class-string<ListenerInterface>>>
+     */
     protected array $listen = [
         OrderCreated::class => [
             SendEmailListener::class,

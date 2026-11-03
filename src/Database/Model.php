@@ -2,34 +2,58 @@
 
 namespace Arc\Framework\Database;
 
+use Arc\Framework\Core\Container;
 use Exception;
 
 /**
  * @property int $id
  */
-
 abstract class Model {
 	protected static string $table;
 	protected bool $exists = false;
+
+	/** @var array<string, mixed> */
 	protected array $attributes = [];
-	protected array $fillable;
-	protected static $container;
+
+	/** @var list<string> */
+	protected array $fillable = [];
+
+	protected static ?Container $container = null;
 	protected ?string $relation = null;
+
+	/** @var array<string, mixed> */
 	protected array $relations = [];
 
 	final public function __construct(){}
 
-	public static function setContainer($container){
+	public static function setContainer(Container $container): void {
 		self::$container = $container;
 	}
 
-	private function setAttributes($result){
+	private static function queryBuilder(): QueryBuilder {
+		if (self::$container === null) {
+			throw new Exception("Container is not set. Call Model::setContainer() first.");
+		}
+
+		$queryBuilder = self::$container->get(QueryBuilder::class);
+
+		if (!$queryBuilder instanceof QueryBuilder) {
+			throw new Exception("Container returned invalid QueryBuilder.");
+		}
+
+		return $queryBuilder;
+	}
+
+	/**
+	 * @param array<string, mixed> $result
+	 */
+	private function setAttributes(array $result): void {
 		$this->attributes = $result;
 
 		$this->exists = true;
 	}
 
-	public function __get(string $name){
+	public function __get(string $name): mixed {
 		if (array_key_exists($name, $this->attributes)){
 			return $this->attributes[$name];
 		}
@@ -41,7 +65,7 @@ abstract class Model {
 		throw new Exception("Property {$name} does not exist.");
 	}
 
-	public function __set($name, $value){
+	public function __set(string $name, mixed $value): void {
 		if (!in_array($name, $this->fillable, true)) {
 			throw new Exception("Property {$name} is not allowed.");
 		}
@@ -49,9 +73,8 @@ abstract class Model {
 		$this->attributes[$name] = $value;
 	}
 
-	public static function find(int $id){
-		$queryBuilder = self::$container->get(QueryBuilder::class);
-		$result = $queryBuilder->table(static::$table)->where('id', '=', $id)->first();
+	public static function find(int $id): static {
+		$result = self::queryBuilder()->table(static::$table)->where('id', '=', $id)->first();
 
 		if ($result == null){
 			throw new Exception("Record ID {$id} not found.");
@@ -63,8 +86,8 @@ abstract class Model {
 		return $childClassInstance;
 	}
 
-	public function save(){
-		$queryBuilder = self::$container->get(QueryBuilder::class);
+	public function save(): static|bool {
+		$queryBuilder = self::queryBuilder();
 
 		if ($this->exists){
 			$result = $queryBuilder->table(static::$table)->where('id', '=', $this->attributes['id'])->update($this->attributes);
@@ -80,24 +103,24 @@ abstract class Model {
 		return $this;
 	}
 
-	public static function all(){
-		$queryBuilder = self::$container->get(QueryBuilder::class);
-
-		return $queryBuilder->table(static::$table)->get();
+	/**
+	 * @return list<array<string, mixed>>
+	 */
+	public static function all(): array {
+		return self::queryBuilder()->table(static::$table)->get();
 	}
 
-	protected function hasMany(string $relatedModel, string $foreignKey = '', string $localKey = 'id'){
+	/**
+	 * @return list<array<string, mixed>>
+	 */
+	protected function hasMany(string $relatedModel, string $foreignKey = '', string $localKey = 'id'): array {
 		$table = $relatedModel::getTableName();
 		$field = !empty($foreignKey) ? $foreignKey : strtolower(get_class($this)) . '_id';
 
-		$queryBuilder = self::$container->get(QueryBuilder::class);
-
-		$posts = $queryBuilder->table($table)->where($field, '=', $this->attributes['id'])->get();
-
-		return $posts;
+		return self::queryBuilder()->table($table)->where($field, '=', $this->attributes['id'])->get();
 	}
 
-	protected function belongsTo(string $relatedModel, string $foreignKey = '', string $ownerKey = 'id'){	
+	protected function belongsTo(string $relatedModel, string $foreignKey = '', string $ownerKey = 'id'): Model {
 		$field = !empty($foreignKey) ? $foreignKey : strtolower($relatedModel) . '_id';
 
 		$id = $this->attributes[$field];
@@ -109,17 +132,20 @@ abstract class Model {
 		return static::$table;
 	}
 
-	public static function with(string $relation): self {
-    $model = new static();
+	public static function with(string $relation): static {
+		$model = new static();
 		$model->relation = $relation;
 
 		return $model;
-  }
+	}
 
+	/**
+	 * @return list<static>
+	 */
 	public function get(): array {
 		$table = static::$table;
 
-		$queryBuilder = self::$container->get(QueryBuilder::class);
+		$queryBuilder = self::queryBuilder();
 		$rows = $queryBuilder->table($table)->get();
 
 		$objects = array_map(function($row){
@@ -130,20 +156,21 @@ abstract class Model {
 		}, $rows);
 
 		if ($this->relation !== null) {
-				// eager loading
+			// eager loading
 			$ids = array_map(fn($user) => $user->id, $objects);
 			$relationRecords = $queryBuilder->table($this->relation)->whereIn("user_id", $ids)->get();
 
 			$postsGroupedByUsers = [];
-			
+
 			foreach ($relationRecords as $rel){
 				$postsGroupedByUsers[$rel['user_id']][] = $rel;
 			}
 
 			foreach ($objects as $user) {
-					$user->setRelation('posts', $postsGroupedByUsers[$user->id] ?? []);
+				$user->setRelation('posts', $postsGroupedByUsers[$user->id] ?? []);
 			}
 		}
+
 		return $objects;
 	}
 

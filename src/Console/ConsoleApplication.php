@@ -7,12 +7,18 @@ use Arc\Framework\Console\CommandInterface;
 use Throwable;
 
 class ConsoleApplication {
+	/**
+	 * @var array<string, CommandInterface>
+	 */
 	protected static array $commands = [];
 
 	public function add(CommandInterface $command): void {
 		self::$commands[$command->getName()] = $command;
 	}
 
+	/**
+	 * @param array<string> $argv
+	 */
 	public function run(array $argv): int {
 		if (!isset($argv[1])){
 			return self::$commands['help']->execute(new Input([], []));
@@ -42,7 +48,10 @@ class ConsoleApplication {
 		}
 	}
 
-	public static function getCommands(){
+	/**
+	 * @return array<string, CommandInterface>
+	 */
+	public static function getCommands(): array {
 		return self::$commands;
 	}
 }

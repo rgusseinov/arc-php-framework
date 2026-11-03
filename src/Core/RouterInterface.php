@@ -7,6 +7,10 @@ namespace Arc\Framework\Core;
 use Arc\Framework\Http\Request;
 
 interface RouterInterface {
-  public function get(string $path, $handler);
-  public function match(Request $request): callable|array|Route|null;
+  /**
+   * @param array<int, mixed> $handler
+   */
+  public function get(string $path, array $handler): void;
+
+  public function match(Request $request): ?Route;
 }

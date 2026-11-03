@@ -7,7 +7,13 @@ use InvalidArgumentException;
 class QueryBuilder {
   private Connection $connection;
   private string $table;
+
+  /** @var array<int, string> */
   private array $columns = ["*"];
+
+  /**
+   * @var list<array{type: string, data: array{column: string, operator: string|null, value: mixed}}>
+   */
   private array $wheres = [];
 
   public function __construct(Connection $connection){
@@ -20,6 +26,9 @@ class QueryBuilder {
     return $this;
   }
 
+  /**
+   * @param array<int, string>|string $columns
+   */
   public function select(array|string $columns): self {
     $this->columns = is_array($columns) ? $columns : [$columns];
 
@@ -39,6 +48,9 @@ class QueryBuilder {
     return $this;
   }
 
+  /**
+   * @return array{sql: string, params: array<int, mixed>}
+   */
   private function buildSelect(): array {
       $table = $this->table;
       $columns = $this->columns;
@@ -46,7 +58,7 @@ class QueryBuilder {
       $columnsString = implode(',', $columns);
       $sql = "SELECT {$columnsString} FROM {$table}";
 
-			['sql' => $conditionString, 'params' => $params] = $this->buildWhere();
+      ['sql' => $conditionString, 'params' => $params] = $this->buildWhere();
 
       if (!(empty($conditionString))){
         $sql .= " WHERE {$conditionString}";
@@ -55,22 +67,31 @@ class QueryBuilder {
       return ['sql' => $sql, 'params' => $params];
   }
 
+  /**
+   * @return array<string, mixed>|null
+   */
   public function first(): ?array {
     ['sql' => $sql, 'params' => $params] = $this->buildSelect();
 
     return $this->connection->fetch($sql, $params);
   }
 
-	public function get() {
-		['sql' => $sql, 'params' => $params] = $this->buildSelect();
+  /**
+   * @return list<array<string, mixed>>
+   */
+  public function get(): array {
+    ['sql' => $sql, 'params' => $params] = $this->buildSelect();
 
-		return $this->connection->fetchAll($sql, $params);
-	}
+    return $this->connection->fetchAll($sql, $params);
+  }
 
-	
+  /**
+   * @param array<string, mixed> $data
+   * @return array{sql: string, params: array<int, mixed>}
+   */
   private function buildInsert(array $data): array {
     $table = $this->table;
-    
+
     $fields = implode(',', array_keys($data));
     $params = array_values($data);
     $placeholders = implode(',', array_fill(0, count($params), '?'));
@@ -80,6 +101,9 @@ class QueryBuilder {
     return ['sql' => $sql, 'params' => $params];
   }
 
+  /**
+   * @param array<string, mixed> $data
+   */
   public function insert(array $data): string|int {
     if (empty($data)){
       throw new InvalidArgumentException('Inserted data can"t be empty');
@@ -90,40 +114,46 @@ class QueryBuilder {
     return $this->connection->insert($sql, $params);
   }
 
+  /**
+   * @param array<string, mixed> $data
+   * @return array{sql: string, params: array<int, mixed>}
+   */
   private function buildUpdate(array $data): array {
-		$wheres = $this->wheres;
+    $wheres = $this->wheres;
 
     if (empty($wheres)){
-			throw new InvalidArgumentException('Where condition must me specified');
-		}
-			
-	  $table = $this->table;
-			
-    $sql = "";
+      throw new InvalidArgumentException('Where condition must me specified');
+    }
+
+    $table = $this->table;
+
     $clauses = [];
     $setParams = [];
-    
+
     foreach (array_keys($data) as $key){
       $clauses[] = "{$key} = ?";
 
       $setParams[] = $data[$key];
     }
-		
+
     ['sql' => $whereConditionString, 'params' => $params] = $this->buildWhere();
 
-		$params = array_merge($setParams, $params);
-		
+    $params = array_merge($setParams, $params);
+
     $clausesString = implode(',', $clauses);
     $sql = "UPDATE {$table} SET {$clausesString} WHERE {$whereConditionString}";
 
     return ['sql' => $sql, 'params' => $params];
   }
 
+  /**
+   * @return array{sql: string, params: array<int, mixed>}
+   */
   private function buildWhere(): array {
-		$wheres = $this->wheres;
+    $wheres = $this->wheres;
 
     $condition = [];
-		$params = [];
+    $params = [];
 
     foreach ($wheres as $where){
       $type = $where['type'];
@@ -139,10 +169,11 @@ class QueryBuilder {
           $params[] = $value;
           break;
         case 'in':
-          $placeholders = implode(',', array_fill(0, count($value), '?'));
+          $values = is_array($value) ? $value : [];
+          $placeholders = implode(',', array_fill(0, count($values), '?'));
 
           $condition[] = "{$column} IN ($placeholders)";
-          $params = [...$params, ...$value];
+          $params = [...$params, ...$values];
           break;
       }
     }
@@ -152,7 +183,10 @@ class QueryBuilder {
     return ['sql' => $sql, 'params' => $params];
   }
 
-  public function update(array $data): string|int {
+  /**
+   * @param array<string, mixed> $data
+   */
+  public function update(array $data): int {
     if (empty($data)){
       throw new InvalidArgumentException('Updated data can\'t be empty');
     }
@@ -162,21 +196,24 @@ class QueryBuilder {
     return $this->connection->execute($sql, $params);
   }
 
-	public function delete() {
-		$wheres = $this->wheres;
+  public function delete(): int {
+    $wheres = $this->wheres;
 
     if (empty($wheres)){
-			throw new InvalidArgumentException('Where condition must me specified');
-		}
+      throw new InvalidArgumentException('Where condition must me specified');
+    }
 
-	  $table = $this->table;
-    
+    $table = $this->table;
+
     ['sql' => $conditionString, 'params' => $params] = $this->buildWhere();
     $sql = "DELETE FROM {$table} WHERE {$conditionString}";
 
     return $this->connection->execute($sql, $params);
-	}
-  
+  }
+
+  /**
+   * @param array<int, mixed> $values
+   */
   public function whereIn(string $column, array $values): self {
     $this->wheres[] = [
       'type' => 'in',
@@ -186,7 +223,7 @@ class QueryBuilder {
         'value' => $values
       ]
     ];
-    
+
     return $this;
   }
 }

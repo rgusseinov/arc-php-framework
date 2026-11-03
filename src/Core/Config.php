@@ -34,6 +34,9 @@ class Config {
         return array_key_exists($parts[1], $data) ? $data[$parts[1]] : $default;
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     private function load(string $name): ?array
     {
         if (!array_key_exists($name, $this->loaded)) {

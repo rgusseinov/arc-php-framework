@@ -8,35 +8,16 @@ use Arc\Framework\Http\Request;
 use RuntimeException;
 
 class Router implements RouterInterface {
+  /** @var array<string, list<Route>> */
   private array $routes = [
     'GET' => [],
     'POST' => [],
   ];
 
-  /*
-    [
-      'GET' => [
-        '/' => callable,
-        '/users' => callable,
-        '/users/{id}' => callable,
-      ],
-      'POST' => [
-        '/users' => callable,
-      ],
-    ]
-  */
-
-
-  /* [
-    'GET' => [
-          Route,
-          Route,
-          Route
-    ]
-  ] */
-
-
-  private function addRoutes(string $method, string $path, callable|array $handler) {
+  /**
+   * @param array<int, mixed> $handler
+   */
+  private function addRoutes(string $method, string $path, array $handler): void {
     $method = strtoupper($method);
     $routes = $this->routes[$method] ?? [];
 
@@ -47,23 +28,19 @@ class Router implements RouterInterface {
     }
 
     $routes[] = new Route($method, $path, $handler);
-    
+
     $this->routes[$method] = $routes;
   }
 
-  public function get(string $path, $handler)
+  /**
+   * @param array<int, mixed> $handler
+   */
+  public function get(string $path, array $handler): void
   {
     $this->addRoutes('GET', $path, $handler);
   }
 
-  /* 
-  $router->get('/', [HomeController::class, 'index']);
-  $router->get('/tasks', [HomeController::class, 'tasks']);
-
-  $router->get('/users/{id}', [HomeController::class, 'index']);
-  */
-
-  public function match(Request $request): callable|array|Route|null
+  public function match(Request $request): ?Route
   {
     $method = strtoupper($request->getMethod());
     $path   = $request->getPath();
@@ -103,7 +80,6 @@ class Router implements RouterInterface {
               str_starts_with($routeSegment, '{') &&
               str_ends_with($routeSegment, '}')
           ) {
-            
             $paramName = substr($routeSegment, 1, strlen($routeSegment) - 2);
 
             $params[$paramName] = $userPathSegments[$index];
@@ -119,13 +95,12 @@ class Router implements RouterInterface {
       }
 
       if ($matched) {
-        // print_r($params); exit;
         $route->setParams($params);
 
         return $route;
       }
-
     }
+
     return null;
   }
 }

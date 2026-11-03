@@ -7,16 +7,18 @@ use Arc\Framework\Database\Model;
 class User extends Model {
     protected static string $table = 'users';
 
+    /** @var list<string> */
     protected array $fillable = [
         'email',
         'full_name',
         'password_hash',
         'created_at'
     ];
-    
-    public function posts(){
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    public function posts(): array {
         return $this->hasMany(Post::class);
     }
 }
-
-

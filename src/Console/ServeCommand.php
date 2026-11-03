@@ -40,7 +40,7 @@ class ServeCommand implements CommandInterface {
 		return ($port >= 1 && $port <= 65535);
 	}
 
-	private function buildCommandString(int $port){
+	private function buildCommandString(int $port): string {
 		$command = "php -S 127.0.0.1:{$port} -t public";
 
 		return $command;

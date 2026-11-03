@@ -15,7 +15,7 @@ class Employee extends Model {
         'created_at'
     ];
 
-    public function company(){
+    public function company(): Model {
         return $this->belongsTo(Company::class);
     }
 }

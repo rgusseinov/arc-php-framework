@@ -3,8 +3,12 @@
 namespace Arc\Framework\Console;
 
 class HelpCommand implements CommandInterface {
+	/** @var array<string, CommandInterface> */
 	private array $commands = [];
 
+	/**
+	 * @param array<string, CommandInterface> $commands
+	 */
 	public function setCommands(array $commands): void {
 		$this->commands = $commands;
 	}

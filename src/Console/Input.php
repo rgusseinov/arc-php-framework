@@ -3,9 +3,16 @@
 namespace Arc\Framework\Console;
 
 class Input {
-		private $arguments = [];
-		private $options = [];
-		
+		/** @var array<int, string> */
+		private array $arguments = [];
+
+		/** @var array<string, string|bool> */
+		private array $options = [];
+
+		/**
+		 * @param array<int, string> $arguments
+		 * @param array<string, string|bool> $options
+		 */
 		public function __construct(array $arguments, array $options){
 			$this->arguments = $arguments;
 			$this->options = $options;
@@ -19,7 +26,10 @@ class Input {
 			return $this->options[$name] ?? $default;
     }
 
-    public function getOptions(): array {
+		/**
+		 * @return array<string, string|bool>
+		 */
+		public function getOptions(): array {
 			return $this->options;
     }
 
@@ -31,7 +41,10 @@ class Input {
 			return $this->arguments[$index] ?? $default;
     }
 
-    public function getArguments(): array {
+		/**
+		 * @return array<int, string>
+		 */
+		public function getArguments(): array {
 			return $this->arguments;
     }
 }

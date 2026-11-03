@@ -4,6 +4,9 @@ namespace Arc\Framework\Helpers;
 
 use Arc\Framework\Http\Response;
 
+/**
+ * @param array<string, mixed> $data
+ */
 function view(string $template, array $data): Response {
   $path = __DIR__ . "/../Templates/{$template}.php";
 

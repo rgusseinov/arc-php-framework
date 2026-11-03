@@ -9,6 +9,7 @@ use RuntimeException;
 class Application
 {
     private Container $container;
+    /** @var list<ServiceProviderInterface> */
     private array $providers = [];
     private bool $booted = false;
 

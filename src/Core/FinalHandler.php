@@ -7,18 +7,17 @@ namespace Arc\Framework\Core;
 use Arc\Framework\Http\Request;
 use Arc\Framework\Http\Response;
 use Arc\Framework\Middlewares\RequestHandlerInterface;
-use Closure;
 use ReflectionMethod;
 use ReflectionNamedType;
 
 class FinalHandler implements RequestHandlerInterface {
-  private $router;
-  private $container;
-  
-  public function __construct($router, $container)
+  private Router $router;
+  private Container $container;
+
+  public function __construct(Router $router, Container $container)
   {
-    $this->router = $router; 
-    $this->container = $container; 
+    $this->router = $router;
+    $this->container = $container;
   }
 
   public function handle(Request $request): Response {
@@ -30,69 +29,58 @@ class FinalHandler implements RequestHandlerInterface {
 
     $handler = $route->getHandler();
     $routeParams = $route->getParams();
-    
+
     // Controller handler: [Controller::class, 'method']
-    if (is_array($handler) && count($handler) === 2) {
-      
-      [$controllerClass, $method] = $handler;
-      
-      $controller = $this->container->get($controllerClass);
+    if (count($handler) !== 2) {
+      return new Response(500, [], "Invalid route handler");
+    }
 
-      if (!method_exists($controller, $method)) {
-          return new Response(404, [], "Method {$method} not exists");
+    [$controllerClass, $method] = $handler;
+
+    $controller = $this->container->get($controllerClass);
+
+    if (!method_exists($controller, $method)) {
+      return new Response(404, [], "Method {$method} not exists");
+    }
+
+    $reflection = new ReflectionMethod($controller, $method);
+    $parameters = $reflection->getParameters();
+
+    $args = [];
+
+    foreach ($parameters as $param) {
+      $name = $param->getName();
+      $type = $param->getType();
+
+      // 1 route params
+      if (array_key_exists($name, $routeParams)) {
+        $args[] = $routeParams[$name];
+        continue;
       }
 
-      $reflection = new ReflectionMethod($controller, $method);
-      $parameters = $reflection->getParameters();
-      
-      $args = [];
+      if ($type instanceof ReflectionNamedType) {
+        // 2 Request
+        if ($type->getName() === Request::class) {
+          $args[] = $request;
+          continue;
+        }
 
-      foreach ($parameters as $param) {
-
-          $name = $param->getName();
-          $type = $param->getType();
-
-          // 1 route params
-          if (array_key_exists($name, $routeParams)) {
-              $args[] = $routeParams[$name];
-              continue;
-          }
-
-          // 2 Request
-          if ($type instanceof ReflectionNamedType){
-            if ($type->getName() === Request::class) {
-                $args[] = $request;
-                continue;
-            }
-          }
-
-          // 3 Container service
-          if ($type instanceof ReflectionNamedType){
-            if (!$type->isBuiltin()) {
-                $args[] = $this->container->get($type->getName());
-                continue;
-            }
-          }
-
-          // 4 fallback
-          return new Response(500, [], "The Argument can't be solve");
+        // 3 Container service
+        if (!$type->isBuiltin()) {
+          $args[] = $this->container->get($type->getName());
+          continue;
+        }
       }
 
-    
-      $response = $reflection->invokeArgs($controller, $args);
+      // 4 fallback
+      return new Response(500, [], "The Argument can't be solve");
     }
-    // Closure handler
-    elseif ($handler instanceof Closure) {
-        $response = $handler($request);
-    }
-    // Unknown handler type
-    else {
-        return new Response(500, [], "Invalid route handler");
-    }
+
+    $response = $reflection->invokeArgs($controller, $args);
 
     // Гарантия контракта: всегда возвращаем Response
     if (!$response instanceof Response) {
-        return new Response(500, [], "Handler must return Response instance");
+      return new Response(500, [], "Handler must return Response instance");
     }
 
     return $response;
