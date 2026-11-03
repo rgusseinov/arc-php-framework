@@ -5,44 +5,50 @@ namespace Arc\Framework\Console;
 use Arc\Framework\Console\CommandInterface;
 use Exception;
 
-class ServeCommand implements CommandInterface {
-	private int $defaultPort = 8000;
+class ServeCommand implements CommandInterface
+{
+    private int $defaultPort = 8000;
 
-	public function getName(): string {
-		return "serve";	
-	}
+    public function getName(): string
+    {
+        return "serve";
+    }
 
-	public function getDescription(): string {
-		return "Start the Arc development server";
-	}
+    public function getDescription(): string
+    {
+        return "Start the Arc development server";
+    }
 
- 	public function execute(Input $input): int {
-		$port = $input->getOption('port', $this->defaultPort);
+    public function execute(Input $input): int
+    {
+        $port = $input->getOption('port', $this->defaultPort);
 
-		if (filter_var($port, FILTER_VALIDATE_INT) === false){
-			throw new Exception("Port {$port} must be an integer");
-		}
+        if (filter_var($port, FILTER_VALIDATE_INT) === false) {
+            throw new Exception("Port {$port} must be an integer");
+        }
 
-		$port = (int)$port;
-		
-		if (!$this->validatePort($port)){
-			throw new Exception("The port {$port} is out range 1..65535");
-		}
+        $port = (int)$port;
 
-		$command = $this->buildCommandString($port);
+        if (!$this->validatePort($port)) {
+            throw new Exception("The port {$port} is out range 1..65535");
+        }
 
-		system($command, $retval);
+        $command = $this->buildCommandString($port);
 
-		return $retval;
-	}
+        system($command, $retval);
 
-	private function validatePort(int $port): bool {
-		return ($port >= 1 && $port <= 65535);
-	}
+        return $retval;
+    }
 
-	private function buildCommandString(int $port): string {
-		$command = "php -S 127.0.0.1:{$port} -t public";
+    private function validatePort(int $port): bool
+    {
+        return ($port >= 1 && $port <= 65535);
+    }
 
-		return $command;
-	}
+    private function buildCommandString(int $port): string
+    {
+        $command = "php -S 127.0.0.1:{$port} -t public";
+
+        return $command;
+    }
 }

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Arc\Framework\Core;
 
-class Config {
+class Config
+{
     private string $configPath;
 
     /** @var array<string, array<string, mixed>|null> */

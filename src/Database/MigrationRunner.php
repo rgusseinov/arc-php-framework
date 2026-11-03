@@ -4,16 +4,19 @@ namespace Arc\Framework\Database;
 
 use Exception;
 
-class MigrationRunner {
+class MigrationRunner
+{
     private Connection $connection;
     private string $migrationPath;
 
-    public function __construct(Connection $connection){
+    public function __construct(Connection $connection)
+    {
         $this->connection = $connection;
         $this->migrationPath = __DIR__ . '/../../migrations';
     }
 
-    public function run(): void {
+    public function run(): void
+    {
         $this->createMigrationsTableIfNotExists();
 
         $files = $this->findMigrationFiles();
@@ -29,7 +32,7 @@ class MigrationRunner {
 
             $migration = require $file;
 
-            if (!$migration instanceof Migration){
+            if (!$migration instanceof Migration) {
                 throw new Exception("Migration file {$migrationName} must be Migration instance");
             }
 
@@ -43,7 +46,8 @@ class MigrationRunner {
         }
     }
 
-    private function createMigrationsTableIfNotExists(): void {
+    private function createMigrationsTableIfNotExists(): void
+    {
         $this->connection->execute("
             CREATE TABLE IF NOT EXISTS migrations (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -56,7 +60,8 @@ class MigrationRunner {
     /**
      * @return list<string>
      */
-    private function findMigrationFiles(): array {
+    private function findMigrationFiles(): array
+    {
         $files = glob($this->migrationPath . '/*.php');
 
         if ($files === false) {
@@ -71,13 +76,15 @@ class MigrationRunner {
     /**
      * @return array<int, mixed>
      */
-    private function getExecutedMigrations(): array {
+    private function getExecutedMigrations(): array
+    {
         $rows = $this->connection->fetchAll('SELECT migration FROM migrations');
 
         return array_column($rows, 'migration');
     }
 
-    private function markAsExecuted(string $migrationName): void {
+    private function markAsExecuted(string $migrationName): void
+    {
         $this->connection->execute('INSERT INTO migrations(migration, executed_at) VALUES (?, NOW())', [$migrationName]);
     }
 }

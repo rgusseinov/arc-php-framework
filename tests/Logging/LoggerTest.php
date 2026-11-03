@@ -71,7 +71,7 @@ final class LoggerTest extends TestCase
     {
         $logger = new Logger($this->logPath, LogLevel::Debug);
 
-        $value = new class implements Stringable {
+        $value = new class () implements Stringable {
             public function __toString(): string
             {
                 return 'OBJ_VALUE';

@@ -7,80 +7,90 @@ use PDOStatement;
 
 class Connection
 {
-	private PDO $pdo;
+    private PDO $pdo;
 
-	public function __construct(string $dsn, string $user, string $password) {
-		$this->pdo = new PDO($dsn, $user, $password, [
-    	PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-		]);
+    public function __construct(string $dsn, string $user, string $password)
+    {
+        $this->pdo = new PDO($dsn, $user, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ]);
 
-		$this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
-	}
+        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
+    }
 
-	public function beginTransaction(): void {
-		$this->pdo->beginTransaction();
-	}
+    public function beginTransaction(): void
+    {
+        $this->pdo->beginTransaction();
+    }
 
-	public function commit(): void {
-		$this->pdo->commit();
-	}
-	
-	public function rollback(): void {
-		$this->pdo->rollBack();
-	}
+    public function commit(): void
+    {
+        $this->pdo->commit();
+    }
 
-	/**
-	 * @param array<int, mixed> $params
-	 */
-	private function prepareAndExecute(string $sql, array $params): PDOStatement {
-		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute($params);
-		
-		return $stmt;
-	}
+    public function rollback(): void
+    {
+        $this->pdo->rollBack();
+    }
 
-	public function table(string $table): QueryBuilder {
-		return (new QueryBuilder($this))->table($table);
-	}
+    /**
+     * @param array<int, mixed> $params
+     */
+    private function prepareAndExecute(string $sql, array $params): PDOStatement
+    {
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
 
-	/**
-	 * @param array<int, mixed> $params
-	 * @return array<string, mixed>|null
-	 */
-	public function fetch(string $sql, array $params = []): ?array {
-		$stmt = $this->prepareAndExecute($sql, $params);
-		$result = $stmt->fetch();
+        return $stmt;
+    }
 
-		return $result === false ? null : $result;
-	}
+    public function table(string $table): QueryBuilder
+    {
+        return (new QueryBuilder($this))->table($table);
+    }
 
-	/**
-	 * @param array<int, mixed> $params
-	 * @return list<array<string, mixed>>
-	 */
-	public function fetchAll(string $sql, array $params = []): array {
-		$stmt = $this->prepareAndExecute($sql, $params);
-		$result = $stmt->fetchAll();
+    /**
+     * @param array<int, mixed> $params
+     * @return array<string, mixed>|null
+     */
+    public function fetch(string $sql, array $params = []): ?array
+    {
+        $stmt = $this->prepareAndExecute($sql, $params);
+        $result = $stmt->fetch();
 
-		return $result;
-	}
+        return $result === false ? null : $result;
+    }
 
-	/**
-	 * @param array<int, mixed> $params
-	 */
-	public function execute(string $sql, array $params = []): int {
-		$stmt = $this->prepareAndExecute($sql, $params);
+    /**
+     * @param array<int, mixed> $params
+     * @return list<array<string, mixed>>
+     */
+    public function fetchAll(string $sql, array $params = []): array
+    {
+        $stmt = $this->prepareAndExecute($sql, $params);
+        $result = $stmt->fetchAll();
 
-		return $stmt->rowCount();
-	}
+        return $result;
+    }
 
-	/**
-	 * @param array<int, mixed> $params
-	 */
-	public function insert(string $sql, array $params = []): string|int {
-		$this->prepareAndExecute($sql, $params);
+    /**
+     * @param array<int, mixed> $params
+     */
+    public function execute(string $sql, array $params = []): int
+    {
+        $stmt = $this->prepareAndExecute($sql, $params);
 
-		return $this->pdo->lastInsertId();
-	}
+        return $stmt->rowCount();
+    }
+
+    /**
+     * @param array<int, mixed> $params
+     */
+    public function insert(string $sql, array $params = []): string|int
+    {
+        $this->prepareAndExecute($sql, $params);
+
+        return $this->pdo->lastInsertId();
+    }
 
 }

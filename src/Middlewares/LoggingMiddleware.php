@@ -5,12 +5,14 @@ namespace Arc\Framework\Middlewares;
 use Arc\Framework\Http\Request;
 use Arc\Framework\Http\Response;
 
-class LoggingMiddleware implements MiddlewareInterface {
-    public function process(Request $request, RequestHandlerInterface $handler): Response {
+class LoggingMiddleware implements MiddlewareInterface
+{
+    public function process(Request $request, RequestHandlerInterface $handler): Response
+    {
         // echo "LogMiddleware: before\n";
-        
+
         $response = $handler->handle($request);
-        
+
         // echo "LogMiddleware: after\n";
 
         return $response;

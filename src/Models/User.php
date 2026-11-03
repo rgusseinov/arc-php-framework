@@ -4,7 +4,8 @@ namespace Arc\Framework\Models;
 
 use Arc\Framework\Database\Model;
 
-class User extends Model {
+class User extends Model
+{
     protected static string $table = 'users';
 
     /** @var list<string> */
@@ -18,7 +19,8 @@ class User extends Model {
     /**
      * @return list<array<string, mixed>>
      */
-    public function posts(): array {
+    public function posts(): array
+    {
         return $this->hasMany(Post::class);
     }
 }

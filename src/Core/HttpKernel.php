@@ -12,31 +12,34 @@ use Arc\Framework\Middlewares\RequestHandlerInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-class HttpKernel implements RequestHandlerInterface {
-  private Router $router;
-  private Container $container;
+class HttpKernel implements RequestHandlerInterface
+{
+    private Router $router;
+    private Container $container;
 
-  public function __construct(Container $container){
-    $this->router = $container->get(Router::class);
-    $this->container = $container;
-  }
-
-  public function handle(Request $request): Response {
-    $pipeline = new MiddlewarePipeline([
-      new LoggingMiddleware()
-    ]);
-
-    try {
-      $finalHandler = new FinalHandler($this->router, $this->container);
-      $response = $pipeline->handle($request, $finalHandler);
-
-      return $response;
-    } catch (Throwable $e){
-      $logger = $this->container->get(LoggerInterface::class);
-      $logger->critical($e->getMessage());
-
-      return new Response(500, [], 'Internal Server Error');
+    public function __construct(Container $container)
+    {
+        $this->router = $container->get(Router::class);
+        $this->container = $container;
     }
 
-  }
+    public function handle(Request $request): Response
+    {
+        $pipeline = new MiddlewarePipeline([
+          new LoggingMiddleware()
+        ]);
+
+        try {
+            $finalHandler = new FinalHandler($this->router, $this->container);
+            $response = $pipeline->handle($request, $finalHandler);
+
+            return $response;
+        } catch (Throwable $e) {
+            $logger = $this->container->get(LoggerInterface::class);
+            $logger->critical($e->getMessage());
+
+            return new Response(500, [], 'Internal Server Error');
+        }
+
+    }
 }

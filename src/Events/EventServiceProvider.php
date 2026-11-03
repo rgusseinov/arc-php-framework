@@ -7,7 +7,8 @@ use Arc\Framework\Core\Container;
 use Arc\Framework\Events\Listeners\SendEmailListener;
 use Arc\Framework\Events\Listeners\LogListener;
 
-class EventServiceProvider implements ServiceProviderInterface {
+class EventServiceProvider implements ServiceProviderInterface
+{
     /**
      * @var array<class-string<Event>, list<class-string<ListenerInterface>>>
      */

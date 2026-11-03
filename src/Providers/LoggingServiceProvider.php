@@ -8,8 +8,10 @@ use Arc\Framework\Logging\Logger;
 use Arc\Framework\Logging\LogLevel;
 use Psr\Log\LoggerInterface;
 
-class LoggingServiceProvider implements ServiceProviderInterface {
-    public function register(Container $container): void {
+class LoggingServiceProvider implements ServiceProviderInterface
+{
+    public function register(Container $container): void
+    {
         $container->singleton(LoggerInterface::class, function (Container $container) {
             $config = $container->get(Config::class);
 
@@ -17,7 +19,8 @@ class LoggingServiceProvider implements ServiceProviderInterface {
         });
     }
 
-    public function boot(Container $container): void {
+    public function boot(Container $container): void
+    {
 
     }
 }

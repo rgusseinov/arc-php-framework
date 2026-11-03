@@ -44,7 +44,8 @@ class Application
         $this->booted = true;
     }
 
-    public function getContainer(): Container {
-      return $this->container;
+    public function getContainer(): Container
+    {
+        return $this->container;
     }
 }

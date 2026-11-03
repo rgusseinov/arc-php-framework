@@ -4,7 +4,8 @@ namespace Arc\Framework\Models;
 
 use Arc\Framework\Database\Model;
 
-class Employee extends Model {
+class Employee extends Model
+{
     protected static string $table = 'employees';
 
     protected array $fillable = [
@@ -15,9 +16,8 @@ class Employee extends Model {
         'created_at'
     ];
 
-    public function company(): Model {
+    public function company(): Model
+    {
         return $this->belongsTo(Company::class);
     }
 }
-
-
