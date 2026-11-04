@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+namespace Arc\Framework\Core;
+
 class Env
 {
     public static function load(string $path): void

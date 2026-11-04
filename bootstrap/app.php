@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 use Arc\Framework\Application\Application;
 use Arc\Framework\Core\Config;
+use Arc\Framework\Core\Env;
 
-require_once __DIR__ . '/../Env.php';
-Env::load(__DIR__ . '/../.env');
+$app = new Application(dirname(__DIR__));
 
-$app = new Application();
+Env::load($app->basePath('.env'));
 
-$config = new Config(__DIR__ . '/../config');
+$config = new Config($app->basePath('config'));
 $providers = $config->get('app.providers');
 
 $app->getContainer()->singleton(Config::class, fn () => $config);
 
-foreach ($providers as $provider){
-	$app->register(new $provider());
+foreach ($providers as $provider) {
+    $app->register(new $provider());
 }
 
 $app->boot();
