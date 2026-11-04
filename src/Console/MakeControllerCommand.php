@@ -2,10 +2,7 @@
 
 namespace Arc\Framework\Console;
 
-use Arc\Framework\Console\AbstractGeneratorCommand;
-use Arc\Framework\Console\CommandInterface;
-
-class MakeControllerCommand extends AbstractGeneratorCommand implements CommandInterface
+class MakeControllerCommand extends AbstractGeneratorCommand
 {
     public function getName(): string
     {
@@ -24,6 +21,11 @@ class MakeControllerCommand extends AbstractGeneratorCommand implements CommandI
 
     public function getDirectory(): string
     {
-        return 'src/Controllers';
+        return $this->setting('controller', 'dir', 'app/Controllers');
+    }
+
+    protected function getNamespace(): string
+    {
+        return $this->setting('controller', 'namespace', 'App\\Controllers');
     }
 }

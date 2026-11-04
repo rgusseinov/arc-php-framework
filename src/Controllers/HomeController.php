@@ -1,6 +1,6 @@
 <?php
 
-namespace Arc\Framework\Controllers;
+namespace App\Controllers;
 
 use Arc\Framework\Http\Request;
 use Arc\Framework\Http\Response;

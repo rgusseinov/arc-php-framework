@@ -1,11 +1,14 @@
 {
     "name": "rgusseinov/arc-php-framework",
-    "description": "Mini php framework",
-    "type": "project",
+    "description": "Arc: a lightweight PHP framework",
+    "type": "library",
     "autoload": {
         "psr-4": {
             "Arc\\Framework\\": "src/"
-        }
+        },
+        "files": [
+            "src/Helpers/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

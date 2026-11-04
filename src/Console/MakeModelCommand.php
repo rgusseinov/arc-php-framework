@@ -2,10 +2,7 @@
 
 namespace Arc\Framework\Console;
 
-use Arc\Framework\Console\AbstractGeneratorCommand;
-use Arc\Framework\Console\CommandInterface;
-
-class MakeModelCommand extends AbstractGeneratorCommand implements CommandInterface
+class MakeModelCommand extends AbstractGeneratorCommand
 {
     public function getName(): string
     {
@@ -24,6 +21,11 @@ class MakeModelCommand extends AbstractGeneratorCommand implements CommandInterf
 
     public function getDirectory(): string
     {
-        return 'src/Models';
+        return $this->setting('model', 'dir', 'app/Models');
+    }
+
+    protected function getNamespace(): string
+    {
+        return $this->setting('model', 'namespace', 'App\\Models');
     }
 }

@@ -4,17 +4,20 @@ namespace Arc\Framework\Console;
 
 use Arc\Framework\Application\Application;
 use Arc\Framework\Console\Filesystem\Filesystem;
+use Arc\Framework\Core\Config;
 
 abstract class AbstractGeneratorCommand implements CommandInterface
 {
     protected Application $app;
+    protected Config $config;
 
     abstract protected function getDirectory(): string;
     abstract protected function getStub(): string;
 
-    public function __construct(Application $app)
+    public function __construct(Application $app, Config $config)
     {
         $this->app = $app;
+        $this->config = $config;
     }
 
     public function execute(Input $input): int
@@ -50,9 +53,11 @@ abstract class AbstractGeneratorCommand implements CommandInterface
             return 1;
         }
 
-        $template = '{{class}}';
-
-        $replacement = str_replace($template, $argument, $content);
+        $replacement = str_replace(
+            ['{{class}}', '{{namespace}}'],
+            [$argument, $this->getNamespace()],
+            $content
+        );
 
         $filesystem->write($file, $replacement);
 
@@ -64,5 +69,21 @@ abstract class AbstractGeneratorCommand implements CommandInterface
     protected function getFileName(string $argument): string
     {
         return $argument . '.php';
+    }
+
+    protected function getNamespace(): string
+    {
+        return '';
+    }
+
+    protected function setting(string $type, string $key, string $default): string
+    {
+        $section = $this->config->get('generators.' . $type);
+
+        if (is_array($section) && isset($section[$key]) && is_string($section[$key])) {
+            return $section[$key];
+        }
+
+        return $default;
     }
 }

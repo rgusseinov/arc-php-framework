@@ -1,6 +1,8 @@
 <?php
 
-namespace Arc\Framework\Database;
+namespace {{namespace}};
+
+use Arc\Framework\Database\Model;
 
 class {{class}} extends Model
 {

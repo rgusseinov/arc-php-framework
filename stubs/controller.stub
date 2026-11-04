@@ -1,6 +1,6 @@
 <?php
 
-namespace Arc\Framework\Controllers;
+namespace {{namespace}};
 
 class {{class}}
 {
