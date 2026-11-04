@@ -2,7 +2,7 @@
 
 namespace Tests\Core;
 
-use Arc\Framework\Controllers\HomeController;
+use Tests\Fixtures\DummyController;
 use Arc\Framework\Core\Router;
 use Arc\Framework\Http\Request;
 use PHPUnit\Framework\TestCase;
@@ -16,7 +16,7 @@ final class RouterTest extends TestCase
         parent::setUp();
 
         $this->router = new Router();
-        $this->router->get('/', [HomeController::class, 'show']);
+        $this->router->get('/', [DummyController::class, 'show']);
     }
 
     public function testRouteFound(): void
@@ -34,7 +34,7 @@ final class RouterTest extends TestCase
         $route = $this->router->match($request);
         $handler = $route->getHandler();
 
-        $this->assertEquals([HomeController::class, 'show'], $handler);
+        $this->assertEquals([DummyController::class, 'show'], $handler);
     }
 
     public function testRouterIsNull(): void
