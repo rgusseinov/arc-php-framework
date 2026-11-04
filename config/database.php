@@ -1,5 +1,7 @@
 <?php
 
+use Arc\Framework\Core\Env;
+
 return [
 	'host' => Env::get('DB_HOST'),
 	'name' => Env::get('DB_NAME'),
