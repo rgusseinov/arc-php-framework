@@ -2,6 +2,7 @@
 
 namespace Arc\Framework\Database;
 
+use Arc\Framework\Application\Application;
 use Exception;
 
 class MigrationRunner
@@ -9,10 +10,10 @@ class MigrationRunner
     private Connection $connection;
     private string $migrationPath;
 
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, Application $app)
     {
         $this->connection = $connection;
-        $this->migrationPath = __DIR__ . '/../../migrations';
+        $this->migrationPath = $app->basePath('migrations');
     }
 
     public function run(): void
