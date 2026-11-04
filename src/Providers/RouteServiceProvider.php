@@ -2,6 +2,7 @@
 
 namespace Arc\Framework\Providers;
 
+use Arc\Framework\Application\Application;
 use Arc\Framework\Core\Container;
 use Arc\Framework\Core\Router;
 
@@ -17,7 +18,8 @@ class RouteServiceProvider implements ServiceProviderInterface
     public function boot(Container $container): void
     {
         $router = $container->get(Router::class);
+        $app = $container->get(Application::class);
 
-        require __DIR__ . '/../../config/routes.php';
+        require $app->basePath('config/routes.php');
     }
 }
