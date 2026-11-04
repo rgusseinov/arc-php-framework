@@ -5,14 +5,21 @@ class Env
     public static function load(string $path): void
     {
         if (!file_exists($path)) {
-            throw new Exception(".env file not found.");
+            return;
         }
 
         $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-        foreach ($lines as $line) {
+        if ($lines === false) {
+            return;
+        }
 
+        foreach ($lines as $line) {
             if (str_starts_with(trim($line), '#')) {
+                continue;
+            }
+
+            if (!str_contains($line, '=')) {
                 continue;
             }
 
@@ -24,6 +31,12 @@ class Env
 
     public static function get(string $key): ?string
     {
+        $value = getenv($key);
+
+        if ($value !== false) {
+            return $value;
+        }
+
         return $_ENV[$key] ?? null;
     }
 }
