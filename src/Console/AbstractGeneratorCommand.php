@@ -2,14 +2,20 @@
 
 namespace Arc\Framework\Console;
 
-use Arc\Framework\Console\CommandInterface;
+use Arc\Framework\Application\Application;
 use Arc\Framework\Console\Filesystem\Filesystem;
-use Arc\Framework\Console\Input;
 
 abstract class AbstractGeneratorCommand implements CommandInterface
 {
+    protected Application $app;
+
     abstract protected function getDirectory(): string;
     abstract protected function getStub(): string;
+
+    public function __construct(Application $app)
+    {
+        $this->app = $app;
+    }
 
     public function execute(Input $input): int
     {
@@ -20,7 +26,7 @@ abstract class AbstractGeneratorCommand implements CommandInterface
             return 1;
         }
 
-        $path = $this->getDirectory();
+        $path = $this->app->basePath($this->getDirectory());
         $stubFileName = $this->getStub();
 
         $filesystem = new Filesystem();
