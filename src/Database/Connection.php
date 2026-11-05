@@ -8,27 +8,21 @@ use PDOStatement;
 class Connection
 {
     private ?PDO $pdo = null;
-    private string $dsn;
-    private string $user;
-    private string $password;
 
-    public function __construct(string $dsn, string $user, string $password)
+    /** @var callable(): PDO */
+    private $factory;
+
+    /**
+     * @param callable(): PDO $factory
+     */
+    public function __construct(callable $factory)
     {
-        $this->dsn = $dsn;
-        $this->user = $user;
-        $this->password = $password;
+        $this->factory = $factory;
     }
 
     private function pdo(): PDO
     {
-        if ($this->pdo === null) {
-            $this->pdo = new PDO($this->dsn, $this->user, $this->password, [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            ]);
-        }
-
-        return $this->pdo;
+        return $this->pdo ??= ($this->factory)();
     }
 
     public function beginTransaction(): void
