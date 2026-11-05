@@ -7,30 +7,43 @@ use PDOStatement;
 
 class Connection
 {
-    private PDO $pdo;
+    private ?PDO $pdo = null;
+    private string $dsn;
+    private string $user;
+    private string $password;
 
     public function __construct(string $dsn, string $user, string $password)
     {
-        $this->pdo = new PDO($dsn, $user, $password, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-        ]);
+        $this->dsn = $dsn;
+        $this->user = $user;
+        $this->password = $password;
+    }
 
-        $this->pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
+    private function pdo(): PDO
+    {
+        if ($this->pdo === null) {
+            $this->pdo = new PDO($this->dsn, $this->user, $this->password, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            ]);
+        }
+
+        return $this->pdo;
     }
 
     public function beginTransaction(): void
     {
-        $this->pdo->beginTransaction();
+        $this->pdo()->beginTransaction();
     }
 
     public function commit(): void
     {
-        $this->pdo->commit();
+        $this->pdo()->commit();
     }
 
     public function rollback(): void
     {
-        $this->pdo->rollBack();
+        $this->pdo()->rollBack();
     }
 
     /**
@@ -38,7 +51,7 @@ class Connection
      */
     private function prepareAndExecute(string $sql, array $params): PDOStatement
     {
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = $this->pdo()->prepare($sql);
         $stmt->execute($params);
 
         return $stmt;
@@ -68,9 +81,8 @@ class Connection
     public function fetchAll(string $sql, array $params = []): array
     {
         $stmt = $this->prepareAndExecute($sql, $params);
-        $result = $stmt->fetchAll();
 
-        return $result;
+        return $stmt->fetchAll();
     }
 
     /**
@@ -90,7 +102,6 @@ class Connection
     {
         $this->prepareAndExecute($sql, $params);
 
-        return $this->pdo->lastInsertId();
+        return $this->pdo()->lastInsertId();
     }
-
 }
