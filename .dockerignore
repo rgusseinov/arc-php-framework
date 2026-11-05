@@ -1,6 +1,0 @@
-.git
-.github
-vendor
-.env
-.php-cs-fixer.cache
-storage/*.log
