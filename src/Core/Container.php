@@ -80,7 +80,7 @@ class Container implements ContainerInterface
             return $this->autowire($id);
         }
 
-        throw new Exception("There is some class issue");
+        throw new Exception("Class or binding '{$id}' not found");
     }
 
     /**
