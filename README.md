@@ -69,6 +69,18 @@ class MyServiceProvider implements ServiceProviderInterface
 
 `register()` only registers bindings; use `boot()` to resolve services.
 
+## Roadmap
+
+Current version: 0.2.x (basic core).
+
+Planned for 0.3+:
+
+- cache (PSR-16) and filesystem abstraction
+- sessions
+- queues and scheduled tasks
+- provider auto-discovery via composer `extra`
+- more tests (container, kernel, query builder, middleware)
+
 ## Development
 
 ```bash
