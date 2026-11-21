@@ -2,8 +2,6 @@
 
 namespace Arc\Framework\Console;
 
-use Arc\Framework\Console\ArgvParser;
-use Arc\Framework\Console\CommandInterface;
 use Throwable;
 
 class ConsoleApplication
@@ -11,11 +9,11 @@ class ConsoleApplication
     /**
      * @var array<string, CommandInterface>
      */
-    protected static array $commands = [];
+    private array $commands = [];
 
     public function add(CommandInterface $command): void
     {
-        self::$commands[$command->getName()] = $command;
+        $this->commands[$command->getName()] = $command;
     }
 
     /**
@@ -24,15 +22,15 @@ class ConsoleApplication
     public function run(array $argv): int
     {
         if (!isset($argv[1])) {
-            return self::$commands['help']->execute(new Input([], []));
+            return $this->showHelp();
         }
 
         $command = $argv[1];
 
-        if (!array_key_exists($command, self::$commands)) {
+        if (!array_key_exists($command, $this->commands)) {
             fwrite(STDERR, "Command {$command} not found." . PHP_EOL);
 
-            self::$commands['help']->execute(new Input([], []));
+            $this->showHelp();
 
             return 1;
         }
@@ -40,7 +38,7 @@ class ConsoleApplication
         $parser = new ArgvParser();
         $input = $parser->parse(array_slice($argv, 2));
 
-        $commandObject = self::$commands[$command];
+        $commandObject = $this->commands[$command];
 
         try {
             return $commandObject->execute($input);
@@ -54,8 +52,19 @@ class ConsoleApplication
     /**
      * @return array<string, CommandInterface>
      */
-    public static function getCommands(): array
+    public function getCommands(): array
     {
-        return self::$commands;
+        return $this->commands;
+    }
+
+    private function showHelp(): int
+    {
+        if (!isset($this->commands['help'])) {
+            fwrite(STDERR, "Help command is not registered." . PHP_EOL);
+
+            return 1;
+        }
+
+        return $this->commands['help']->execute(new Input([], []));
     }
 }
