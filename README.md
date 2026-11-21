@@ -71,15 +71,20 @@ class MyServiceProvider implements ServiceProviderInterface
 
 ## Roadmap
 
-Current version: 0.2.x (basic core).
+Current version: 0.2.x (basic core). Early release, API may change.
 
 Planned for 0.3+:
 
+- `Router::post/put/delete`, `Request::json()`, `Response::json()`
+- request validation
+- logging of 404 responses
 - cache (PSR-16) and filesystem abstraction
 - sessions
 - queues and scheduled tasks
 - provider auto-discovery via composer `extra`
-- more tests (container, kernel, query builder, middleware)
+- more tests (kernel, query builder, middleware)
+
+Feedback is welcome: please open an issue.
 
 ## Development
 
